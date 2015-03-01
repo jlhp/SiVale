@@ -9,7 +9,7 @@ public abstract class BaseEnvelope extends BaseSOAP11Envelope {
     /**
      * The namespace of the AonAware services
      */
-    private final static String NAMESPACE = "http://com.sivale.bancamovil.proto/IWebMethods.xsd";
+    private final static String NAMESPACE = "WebMethods";
 
     public BaseEnvelope() {
         declarePrefix("web", NAMESPACE);

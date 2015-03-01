@@ -10,39 +10,134 @@ import com.alexgilleran.icesoap.annotation.XMLObject;
 public class LoginResponse {
 
     @XMLField("tipoTarjeta")
-    public String CardType;
+    private String CardType;
 
     @XMLField("descError")
-    public String ErrorDescription;
+    private String ErrorDescription;
 
     @XMLField("nomTarjeta")
-    public String CardholderName;
+    private String CardholderName;
 
     @XMLField("numTarjeta")
-    public String CardNumber;
+    private String CardNumber;
 
     @XMLField("estatusSesion")
-    public int SessionStatus;
+    private int SessionStatus;
 
     @XMLField("cveError")
-    public int CVEError;
+    private int CVEError;
 
     @XMLField("customerNumber")
-    public String CustomerNumber;
+    private String CustomerNumber;
 
     @XMLField("tiempoDispSeg")
-    public int SecondsAvailable;
+    private int SecondsAvailable;
 
     @XMLField("idSesion")
-    public int SessionId;
+    private int SessionId;
 
     @XMLField("idNivelSeguridad")
-    public String SecurityLevel;
+    private String SecurityLevel;
 
     @XMLField("numCuenta")
-    public String AccountNumber;
+    private String AccountNumber;
 
     @XMLField("cveEmisor")
-    public String CVEEmisor;
+    private String CVEEmisor;
 
+    public String getCardType() {
+        return CardType;
+    }
+
+    public void setCardType(String cardType) {
+        CardType = cardType;
+    }
+
+    public String getErrorDescription() {
+        return ErrorDescription;
+    }
+
+    public void setErrorDescription(String errorDescription) {
+        ErrorDescription = errorDescription;
+    }
+
+    public String getCardholderName() {
+        return CardholderName;
+    }
+
+    public void setCardholderName(String cardholderName) {
+        CardholderName = cardholderName;
+    }
+
+    public String getCardNumber() {
+        return CardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        CardNumber = cardNumber;
+    }
+
+    public int getSessionStatus() {
+        return SessionStatus;
+    }
+
+    public void setSessionStatus(int sessionStatus) {
+        SessionStatus = sessionStatus;
+    }
+
+    public int getCVEError() {
+        return CVEError;
+    }
+
+    public void setCVEError(int CVEError) {
+        this.CVEError = CVEError;
+    }
+
+    public String getCustomerNumber() {
+        return CustomerNumber;
+    }
+
+    public void setCustomerNumber(String customerNumber) {
+        CustomerNumber = customerNumber;
+    }
+
+    public int getSecondsAvailable() {
+        return SecondsAvailable;
+    }
+
+    public void setSecondsAvailable(int secondsAvailable) {
+        SecondsAvailable = secondsAvailable;
+    }
+
+    public int getSessionId() {
+        return SessionId;
+    }
+
+    public void setSessionId(int sessionId) {
+        SessionId = sessionId;
+    }
+
+    public String getSecurityLevel() {
+        return SecurityLevel;
+    }
+
+    public void setSecurityLevel(String securityLevel) {
+        SecurityLevel = securityLevel;
+    }
+
+    public String getAccountNumber() {
+        return AccountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        AccountNumber = accountNumber;
+    }
+
+    public String getCVEEmisor() {
+        return CVEEmisor;
+    }
+
+    public void setCVEEmisor(String CVEEmisor) {
+        this.CVEEmisor = CVEEmisor;
+    }
 }

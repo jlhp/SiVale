@@ -11,19 +11,20 @@ public class LoginEnvelope extends BaseEnvelope {
 
     public LoginEnvelope(String randomString, String cardNumber,
                          String password, String securityLevel) {
-        XMLParentNode loginNode = getBody().addNode(getSiValeNamespace(), "login");
+        XMLParentNode loginNode = getBody().addNode(NS_PREFIX_XSI, "login");
+        loginNode.addAttribute("soapenv", "encodingStyle", "http://schemas.xmlsoap.org/soap/encoding/");
 
         XMLTextNode randomStringNode = new XMLTextNodeImpl(getSiValeNamespace(), "huella_aleatoria", randomString);
-        randomStringNode.addAttribute("xsi", "type", "xsd:string");
+        randomStringNode.addAttribute(null, "xsi:type", "xsd:string");
 
         XMLTextNode cardNumberNode = new XMLTextNodeImpl(getSiValeNamespace(), "num_tarjeta", cardNumber);
-        cardNumberNode.addAttribute("xsi", "type", "xsd:string");
+        cardNumberNode.addAttribute(null, "xsi:type", "xsd:string");
 
         XMLTextNode passwordNode = new XMLTextNodeImpl(getSiValeNamespace(), "passwd", password);
-        passwordNode.addAttribute("xsi", "type", "xsd:string");
+        passwordNode.addAttribute(null, "xsi:type", "xsd:string");
 
         XMLTextNode securityLevelNode = new XMLTextNodeImpl(getSiValeNamespace(), "securityLevel", securityLevel);
-        securityLevelNode.addAttribute("xsi", "type", "xsd:string");
+        securityLevelNode.addAttribute(null, "xsi:type", "xsd:string");
 
         loginNode.addElement(randomStringNode);
         loginNode.addElement(cardNumberNode);
