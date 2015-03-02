@@ -9,9 +9,7 @@ import com.alexgilleran.icesoap.xml.impl.XMLTextNodeImpl;
  * Created by jjherrer on 26/02/2015.
  */
 public class BaseEnvelope extends BaseSOAP11Envelope {
-    /**
-     * The namespace of the AonAware services
-     */
+
     private final static String NAMESPACE = "WebMethods";
 
     private BaseEnvelope() {
