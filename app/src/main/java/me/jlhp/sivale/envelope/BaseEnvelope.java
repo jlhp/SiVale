@@ -31,8 +31,8 @@ public class BaseEnvelope extends BaseSOAP11Envelope {
 
         }
 
-        public Builder setSoapOperation(String soapOperation){
-            if(soapOperation == null) {
+        public Builder setSoapOperation(String soapOperation) {
+            if (soapOperation == null) {
                 throw new IllegalArgumentException("'SoapOperation' must not be null");
             }
 
@@ -45,12 +45,12 @@ public class BaseEnvelope extends BaseSOAP11Envelope {
             return this;
         }
 
-        public Builder addParameter(EnvelopeParameter param){
-            if(SoapOperation == null){
+        public Builder addParameter(EnvelopeParameter param) {
+            if (SoapOperation == null) {
                 throw new IllegalStateException("Call 'setSoapOperation' method first");
             }
 
-            if(param == null) {
+            if (param == null) {
                 throw new IllegalArgumentException("'param' must not be null");
             }
 

@@ -3,7 +3,6 @@ package me.jlhp.sivale;
 import android.content.Context;
 
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.ResponseHandlerInterface;
 
 import org.apache.http.HttpEntity;

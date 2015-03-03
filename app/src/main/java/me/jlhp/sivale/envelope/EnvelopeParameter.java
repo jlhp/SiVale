@@ -8,7 +8,7 @@ public class EnvelopeParameter {
     private String Value;
     private String Type;
 
-    public EnvelopeParameter(String key, String value, String type){
+    public EnvelopeParameter(String key, String value, String type) {
         this.Key = key;
         this.Value = value;
         this.Type = type;
