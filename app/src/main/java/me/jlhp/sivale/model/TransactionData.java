@@ -1,4 +1,4 @@
-package me.jlhp.sivale;
+package me.jlhp.sivale.model;
 
 import com.alexgilleran.icesoap.annotation.XMLField;
 import com.alexgilleran.icesoap.annotation.XMLObject;
@@ -14,13 +14,10 @@ import java.util.List;
  * Created by jjherrer on 03/03/2015.
  */
 @XMLObject("//return")
-public class TransactionData {
+public class TransactionData extends SoapData {
 
     @XMLField(value = "//objMovimientos/item")
     private List<String> StringTransactions;
-
-    @XMLField("//objEstatus/item")
-    private SessionData SessionData;
 
     private List<Transaction> Transactions;
 
@@ -38,21 +35,26 @@ public class TransactionData {
             Transactions = new ArrayList<Transaction>();
 
             for (String s : StringTransactions) {
-                Transactions.add(new Transaction(s.split("\\|")));
+                String[] transactionDetails = s.split("\\|");
+
+                if (transactionDetails.length > 0 && !isStringEmptyOrNull(transactionDetails[0])) {
+                    Transactions.add(new Transaction(transactionDetails));
+                }
             }
         }
 
         return Transactions;
     }
 
-    public SessionData getSessionData() {
-        return SessionData;
+    private boolean isStringEmptyOrNull(String s) {
+        return s == null || s.trim().length() == 0;
     }
 
-    public void setSessionData(SessionData sessionData) {
-        SessionData = sessionData;
-    }
-
+    /**
+     * The SiVale API has a bug in which even if you send a session that has been expired or is not
+     * correct it will send you the same amount of transactions you have registered throughout the
+     * card usage, the only catch is that they will contain no data.
+     */
     private class Transaction {
         private BigInteger TransactionId;
         private String CardNumber;
@@ -65,11 +67,11 @@ public class TransactionData {
                 throw new IllegalArgumentException("'data' must not be null and should contain at least 5 elements");
             }
 
-            setTransactionId(new BigInteger(data[0].trim()));
-            setCardNumber(data[1].trim());
-            setTransactionDate(data[2].trim());
-            setAmount(Double.parseDouble(data[3].trim()));
-            setCommerce(data[4].trim());
+            if (!isStringEmptyOrNull(data[0])) setTransactionId(new BigInteger(data[0].trim()));
+            if (!isStringEmptyOrNull(data[1])) setCardNumber(data[1].trim());
+            if (!isStringEmptyOrNull(data[2])) setTransactionDate(data[2].trim());
+            if (!isStringEmptyOrNull(data[3])) setAmount(Double.parseDouble(data[3].trim()));
+            if (!isStringEmptyOrNull(data[4])) setCommerce(data[4].trim());
         }
 
         public BigInteger getTransactionId() {
@@ -120,6 +122,31 @@ public class TransactionData {
 
         public void setCommerce(String commerce) {
             Commerce = commerce;
+        }
+
+        public String getSpacedCommerce() {
+            String commerce = Commerce;
+
+            //Contains double space? It's not correctly spaced
+            if (!isStringEmptyOrNull(commerce) && commerce.contains("  ")) {
+                String[] words = commerce.split(" ");
+
+                if (words.length > 0) {
+                    StringBuilder b = new StringBuilder();
+
+                    for (String word : words) {
+                        if (!isStringEmptyOrNull(word)) {
+                            b.append(word);
+                            b.append(" ");
+                        }
+                    }
+
+                    b.deleteCharAt(b.length() - 1);
+                    commerce = b.toString();
+                }
+            }
+
+            return commerce;
         }
     }
 }

@@ -22,7 +22,7 @@ public class MainActivity extends ActionBarActivity {
 
             //client.login(this, getString(R.string.card_number), getString(R.string.passwd));
             //client.getBalance(this, 3324897);
-            client.getTransactions(this, 3324897);
+            client.getTransactions(this, 333135);
         }
     }
 

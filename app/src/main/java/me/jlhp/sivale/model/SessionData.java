@@ -1,4 +1,4 @@
-package me.jlhp.sivale;
+package me.jlhp.sivale.model;
 
 import com.alexgilleran.icesoap.annotation.XMLField;
 import com.alexgilleran.icesoap.annotation.XMLObject;
@@ -139,5 +139,9 @@ public class SessionData {
 
     public void setCVEEmisor(String CVEEmisor) {
         this.CVEEmisor = CVEEmisor;
+    }
+
+    public boolean isError() {
+        return ErrorDescription != null && !ErrorDescription.equalsIgnoreCase("SIN ERROR");
     }
 }

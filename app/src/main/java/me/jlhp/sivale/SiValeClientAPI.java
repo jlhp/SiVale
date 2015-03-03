@@ -12,6 +12,9 @@ import java.io.UnsupportedEncodingException;
 
 import me.jlhp.sivale.envelope.BaseEnvelope;
 import me.jlhp.sivale.envelope.EnvelopeParameter;
+import me.jlhp.sivale.model.BalanceData;
+import me.jlhp.sivale.model.SessionData;
+import me.jlhp.sivale.model.TransactionData;
 
 /**
  * Created by JOSELUIS on 3/1/2015.
