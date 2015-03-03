@@ -27,18 +27,6 @@ import java.io.UnsupportedEncodingException;
 public class MainActivity extends ActionBarActivity {
 
     private AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-    private RequestFactory requestFactory = new RequestFactoryImpl();
-    private SOAP11Observer<LoginResponse> AnonymousObserver = new SOAP11Observer<LoginResponse>() {
-        @Override
-        public void onCompletion(Request<LoginResponse, SOAP11Fault> request) {
-            System.out.print("");
-        }
-
-        @Override
-        public void onException(Request<LoginResponse, SOAP11Fault> request, SOAPException e) {
-            System.out.print("");
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,58 +34,8 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            LoginEnvelope loginEnvelope = null;
-
-            SOAP11Request<LoginResponse> definitionRequest = requestFactory.buildRequest(
-                    "http://148.223.134.18:8888/bancamovil/WebMethods",
-                    loginEnvelope,
-                    null,
-                    LoginResponse.class);
-
-            StringEntity entity = null;
-
-            try {
-                entity = new StringEntity(loginEnvelope.toString());
-                entity.setContentType("text/xml");
-                entity.setContentEncoding("UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-            asyncHttpClient.post(this, "http://148.223.134.18:8888/bancamovil/WebMethods", entity, "text/xml", new AsyncHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    IceSoapParserImpl<LoginResponse> parser = new IceSoapParserImpl<LoginResponse>(LoginResponse.class);
-                    ByteArrayInputStream stream = new ByteArrayInputStream(responseBody);
-                    LoginResponse loginResponse = null;
-
-                    try {
-                        loginResponse = parser.parse(stream);
-                    } catch (XMLParsingException e) {
-                        e.printStackTrace();
-                    }
-
-                    System.out.println();
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                    IceSoapParserImpl<SOAP11Fault> parser = new IceSoapParserImpl<SOAP11Fault>(SOAP11Fault.class);
-                    ByteArrayInputStream stream = new ByteArrayInputStream(responseBody);
-                    SOAP11Fault soap11Fault = null;
-
-                    try {
-                        soap11Fault = parser.parse(stream);
-                    } catch (XMLParsingException e) {
-                        e.printStackTrace();
-                    }
-
-                    System.out.println();
-                }
-            });
-
-            definitionRequest.registerObserver(AnonymousObserver);
-            definitionRequest.execute();
+            SiValeClientAPI client = new SiValeClientAPI();
+            client.login(this, getString(R.string.card_number), getString(R.string.passwd));
         }
     }
 

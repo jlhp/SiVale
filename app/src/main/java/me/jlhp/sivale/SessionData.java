@@ -7,7 +7,7 @@ import com.alexgilleran.icesoap.annotation.XMLObject;
  * Created by jjherrer on 26/02/2015.
  */
 @XMLObject("//item")
-public class LoginResponse {
+public class SessionData {
 
     @XMLField("tipoTarjeta")
     private String CardType;
