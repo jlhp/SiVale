@@ -1,4 +1,4 @@
-package me.jlhp.sivale;
+package me.jlhp.sivale.api;
 
 import android.content.Context;
 
@@ -6,12 +6,14 @@ import com.alexgilleran.icesoap.soapfault.SOAP11Fault;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
-import org.apache.http.entity.StringEntity;
 
-import java.io.UnsupportedEncodingException;
-
+import de.greenrobot.event.EventBus;
 import me.jlhp.sivale.envelope.BaseEnvelope;
 import me.jlhp.sivale.envelope.EnvelopeParameter;
+import me.jlhp.sivale.event.FaultEvent;
+import me.jlhp.sivale.event.GetBalanceEvent;
+import me.jlhp.sivale.event.GetTransactionsEvent;
+import me.jlhp.sivale.event.LoginEvent;
 import me.jlhp.sivale.model.BalanceData;
 import me.jlhp.sivale.model.SessionData;
 import me.jlhp.sivale.model.TransactionData;
@@ -36,16 +38,14 @@ public class SiValeClientAPI {
         postEnvelope(context, loginEnvelope, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                SessionData sessionData = SoapParser.parseSoapData(SessionData.class, responseBody);
-
-                System.out.println();
+                SessionData sessionData = getSoapResponse(SessionData.class, responseBody);
+                postEvent(new LoginEvent(sessionData));
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                SOAP11Fault soap11Fault = SoapParser.parseSoapData(SOAP11Fault.class, responseBody);
-
-                System.out.println();
+                SOAP11Fault soap11Fault = getSoapFault(responseBody, error);
+                postEvent(new FaultEvent(soap11Fault, SiValeOperation.LOGIN));
             }
         });
     }
@@ -59,16 +59,14 @@ public class SiValeClientAPI {
         postEnvelope(context, getBalanceEnvelope, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                BalanceData balanceData = SoapParser.parseSoapData(BalanceData.class, responseBody);
-
-                System.out.println();
+                BalanceData balanceData = getSoapResponse(BalanceData.class, responseBody);
+                postEvent(new GetBalanceEvent(balanceData));
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                SOAP11Fault soap11Fault = SoapParser.parseSoapData(SOAP11Fault.class, responseBody);
-
-                System.out.println();
+                SOAP11Fault soap11Fault = getSoapFault(responseBody, error);
+                postEvent(new FaultEvent(soap11Fault, SiValeOperation.GET_BALANCE));
             }
         });
     }
@@ -82,39 +80,34 @@ public class SiValeClientAPI {
         postEnvelope(context, getTransactionsEnvelope, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                TransactionData transactionData = SoapParser.parseSoapData(TransactionData.class, responseBody);
-
-                System.out.println();
+                TransactionData transactionData = getSoapResponse(TransactionData.class, responseBody);
+                if (!transactionData.isError())
+                    postEvent(new GetTransactionsEvent(transactionData));
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                SOAP11Fault soap11Fault = SoapParser.parseSoapData(SOAP11Fault.class, responseBody);
-
-                System.out.println();
+                SOAP11Fault soap11Fault = getSoapFault(responseBody, error);
+                postEvent(new FaultEvent(soap11Fault, SiValeOperation.GET_TRANSACTIONS));
             }
         });
     }
 
     private void postEnvelope(Context context, BaseEnvelope envelope, AsyncHttpResponseHandler responseHandler) {
-        SiValeClient.post(context, soapEnvelope2StringEntity(envelope), responseHandler);
+        SiValeClient.post(context, envelope, responseHandler);
     }
 
-    private StringEntity soapEnvelope2StringEntity(BaseEnvelope envelope) {
-        if (envelope == null) {
-            throw new IllegalArgumentException("'envelope' must not be null");
-        }
+    private <T> void postEvent(T event) {
+        EventBus.getDefault().postSticky(event);
+    }
 
-        StringEntity entity = null;
+    private <T> T getSoapResponse(Class<T> clazz, byte[] soapData) {
+        return SoapParser.parseSoapData(clazz, soapData);
+    }
 
-        try {
-            entity = new StringEntity(envelope.toString());
-            entity.setContentType("text/xml");
-            entity.setContentEncoding("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        return entity;
+    private SOAP11Fault getSoapFault(byte[] responseBody, Throwable error) {
+        return responseBody != null && error == null ?
+                SoapParser.parseSoapData(SOAP11Fault.class, responseBody) :
+                new SOAP11Fault(null, error.getMessage(), null);
     }
 }

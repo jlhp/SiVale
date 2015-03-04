@@ -3,6 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="action_add">Agregar</string>
     <string name="card_number">5349260339603952</string>
     <string name="passwd">hepl9106</string>
 </resources>

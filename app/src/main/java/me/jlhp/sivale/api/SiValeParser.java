@@ -1,4 +1,4 @@
-package me.jlhp.sivale;
+package me.jlhp.sivale.api;
 
 import com.alexgilleran.icesoap.exception.XMLParsingException;
 import com.alexgilleran.icesoap.parser.IceSoapParser;
@@ -10,7 +10,6 @@ import java.io.ByteArrayInputStream;
  * Created by jjherrer on 02/03/2015.
  */
 public class SiValeParser {
-
     public <T> T parseSoapData(Class<T> clazz, byte[] soapData) {
         if (clazz == null) {
             throw new IllegalArgumentException("'clazz' must not be null");

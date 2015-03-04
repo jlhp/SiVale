@@ -67,10 +67,10 @@ public class TransactionData extends SoapData {
                 throw new IllegalArgumentException("'data' must not be null and should contain at least 5 elements");
             }
 
-            if (!isStringEmptyOrNull(data[0])) setTransactionId(new BigInteger(data[0].trim()));
+            if (!isStringEmptyOrNull(data[0])) setTransactionId(data[0]);
             if (!isStringEmptyOrNull(data[1])) setCardNumber(data[1].trim());
-            if (!isStringEmptyOrNull(data[2])) setTransactionDate(data[2].trim());
-            if (!isStringEmptyOrNull(data[3])) setAmount(Double.parseDouble(data[3].trim()));
+            if (!isStringEmptyOrNull(data[2])) setTransactionDate(data[2]);
+            if (!isStringEmptyOrNull(data[3])) setAmount(data[3]);
             if (!isStringEmptyOrNull(data[4])) setCommerce(data[4].trim());
         }
 
@@ -80,6 +80,19 @@ public class TransactionData extends SoapData {
 
         public void setTransactionId(BigInteger transactionId) {
             TransactionId = transactionId;
+        }
+
+        public void setTransactionId(String transactionId) {
+            BigInteger b = null;
+
+            try {
+                b = isStringEmptyOrNull(transactionId) ? new BigInteger("-1") :
+                        new BigInteger(transactionId.trim());
+            } catch (NumberFormatException ex) {
+                ex.printStackTrace();
+            }
+
+            TransactionId = b;
         }
 
         public String getCardNumber() {
@@ -102,7 +115,7 @@ public class TransactionData extends SoapData {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
             try {
-                TransactionDate = simpleDateFormat.parse(transactionDate);
+                TransactionDate = simpleDateFormat.parse(transactionDate.trim());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -116,6 +129,19 @@ public class TransactionData extends SoapData {
             Amount = amount;
         }
 
+        public void setAmount(String amount) {
+            Double d = null;
+
+            try {
+                d = isStringEmptyOrNull(amount) ? new Double("-1") :
+                        new Double(amount.trim());
+            } catch (NumberFormatException ex) {
+                ex.printStackTrace();
+            }
+
+            Amount = d;
+        }
+
         public String getCommerce() {
             return Commerce;
         }
@@ -127,7 +153,7 @@ public class TransactionData extends SoapData {
         public String getSpacedCommerce() {
             String commerce = Commerce;
 
-            //Contains double space? It's not correctly spaced
+            //Contains double space? Then it isn't correctly spaced
             if (!isStringEmptyOrNull(commerce) && commerce.contains("  ")) {
                 String[] words = commerce.split(" ");
 
