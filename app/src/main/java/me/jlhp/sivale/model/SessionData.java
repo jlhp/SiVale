@@ -7,7 +7,7 @@ import com.alexgilleran.icesoap.annotation.XMLObject;
  * Created by jjherrer on 26/02/2015.
  */
 @XMLObject("//item")
-public class SessionData {
+public class SessionData implements SiValeData {
 
     @XMLField("tipoTarjeta")
     private String CardType;
@@ -141,7 +141,13 @@ public class SessionData {
         this.CVEEmisor = CVEEmisor;
     }
 
+    @Override
     public boolean isError() {
         return ErrorDescription != null && !ErrorDescription.equalsIgnoreCase("SIN ERROR");
+    }
+
+    @Override
+    public String getError() {
+        return ErrorDescription;
     }
 }

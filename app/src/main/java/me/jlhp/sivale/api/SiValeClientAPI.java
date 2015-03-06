@@ -10,12 +10,14 @@ import org.apache.http.Header;
 import de.greenrobot.event.EventBus;
 import me.jlhp.sivale.envelope.BaseEnvelope;
 import me.jlhp.sivale.envelope.EnvelopeParameter;
+import me.jlhp.sivale.event.ErrorEvent;
 import me.jlhp.sivale.event.FaultEvent;
 import me.jlhp.sivale.event.GetBalanceEvent;
 import me.jlhp.sivale.event.GetTransactionsEvent;
 import me.jlhp.sivale.event.LoginEvent;
 import me.jlhp.sivale.model.BalanceData;
 import me.jlhp.sivale.model.SessionData;
+import me.jlhp.sivale.model.SiValeData;
 import me.jlhp.sivale.model.TransactionData;
 
 /**
@@ -27,6 +29,10 @@ public class SiValeClientAPI {
     private final SiValeParser SoapParser = new SiValeParser();
 
     public void login(Context context, String cardNumber, String password) {
+        login(context, cardNumber, password, null);
+    }
+
+    public void login(Context context, String cardNumber, String password, final SiValeOperation retryOperation) {
         BaseEnvelope loginEnvelope = SoapEnvelopeBuilder
                 .setSoapOperation("login")
                 .addParameter(new EnvelopeParameter("huella_aleatoria", "", "xsd:string"))
@@ -39,7 +45,10 @@ public class SiValeClientAPI {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 SessionData sessionData = getSoapResponse(SessionData.class, responseBody);
-                postEvent(new LoginEvent(sessionData));
+                if (isError(sessionData))
+                    postEvent(new ErrorEvent(sessionData.getError(), SiValeOperation.LOGIN));
+                else if (retryOperation == null) postEvent(new LoginEvent(sessionData));
+                else postEvent(new LoginEvent(sessionData, retryOperation));
             }
 
             @Override
@@ -60,7 +69,8 @@ public class SiValeClientAPI {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 BalanceData balanceData = getSoapResponse(BalanceData.class, responseBody);
-                postEvent(new GetBalanceEvent(balanceData));
+                if (!isError(balanceData)) postEvent(new GetBalanceEvent(balanceData));
+                else postEvent(new ErrorEvent(balanceData.getError(), SiValeOperation.GET_BALANCE));
             }
 
             @Override
@@ -81,8 +91,9 @@ public class SiValeClientAPI {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 TransactionData transactionData = getSoapResponse(TransactionData.class, responseBody);
-                if (!transactionData.isError())
-                    postEvent(new GetTransactionsEvent(transactionData));
+                if (!isError(transactionData)) postEvent(new GetTransactionsEvent(transactionData));
+                else
+                    postEvent(new ErrorEvent(transactionData.getError(), SiValeOperation.GET_TRANSACTIONS));
             }
 
             @Override
@@ -97,7 +108,7 @@ public class SiValeClientAPI {
         SiValeClient.post(context, envelope, responseHandler);
     }
 
-    private <T> void postEvent(T event) {
+    private void postEvent(Object event) {
         EventBus.getDefault().postSticky(event);
     }
 
@@ -109,5 +120,13 @@ public class SiValeClientAPI {
         return responseBody != null && error == null ?
                 SoapParser.parseSoapData(SOAP11Fault.class, responseBody) :
                 new SOAP11Fault(null, error.getMessage(), null);
+    }
+
+    private boolean isError(SiValeData data) {
+        if (data == null) {
+            throw new IllegalArgumentException("'data' can't ne null");
+        }
+
+        return data.isError();
     }
 }

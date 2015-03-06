@@ -61,6 +61,7 @@ public class TransactionData extends SoapData {
         private Date TransactionDate;
         private Double Amount;
         private String Commerce;
+        private String SpacedCommerce;
 
         public Transaction(String[] data) {
             if (data == null || data.length < 5) {
@@ -133,8 +134,8 @@ public class TransactionData extends SoapData {
             Double d = null;
 
             try {
-                d = isStringEmptyOrNull(amount) ? new Double("-1") :
-                        new Double(amount.trim());
+                d = isStringEmptyOrNull(amount) ? Double.valueOf("-1") :
+                        Double.valueOf(amount.trim());
             } catch (NumberFormatException ex) {
                 ex.printStackTrace();
             }
@@ -151,11 +152,13 @@ public class TransactionData extends SoapData {
         }
 
         public String getSpacedCommerce() {
-            String commerce = Commerce;
+            if (SpacedCommerce != null) return SpacedCommerce;
+
+            SpacedCommerce = Commerce;
 
             //Contains double space? Then it isn't correctly spaced
-            if (!isStringEmptyOrNull(commerce) && commerce.contains("  ")) {
-                String[] words = commerce.split(" ");
+            if (!isStringEmptyOrNull(SpacedCommerce) && SpacedCommerce.contains("  ")) {
+                String[] words = SpacedCommerce.split(" ");
 
                 if (words.length > 0) {
                     StringBuilder b = new StringBuilder();
@@ -168,11 +171,11 @@ public class TransactionData extends SoapData {
                     }
 
                     b.deleteCharAt(b.length() - 1);
-                    commerce = b.toString();
+                    SpacedCommerce = b.toString();
                 }
             }
 
-            return commerce;
+            return SpacedCommerce;
         }
     }
 }

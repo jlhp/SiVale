@@ -2,7 +2,6 @@ package me.jlhp.sivale;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +13,7 @@ import com.loopj.android.http.AsyncHttpClient;
 
 import de.greenrobot.event.EventBus;
 import me.jlhp.sivale.api.SiValeClientAPI;
+import me.jlhp.sivale.event.ErrorEvent;
 import me.jlhp.sivale.event.FaultEvent;
 import me.jlhp.sivale.event.GetBalanceEvent;
 import me.jlhp.sivale.event.GetTransactionsEvent;
@@ -48,14 +48,6 @@ public class MainActivity extends ActionBarActivity {
                 client.login(MainActivity.this, e2.getText().toString(), e1.getText().toString());
             }
         });
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
     }
 
     @Override
@@ -98,7 +90,19 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onEvent(LoginEvent loginEvent) {
-        client.getBalance(this, loginEvent.getSessionData().getSessionId());
+        if (loginEvent.hasRetryOperation()) {
+            switch (loginEvent.getRetryOperation()) {
+                case GET_BALANCE:
+                    client.getBalance(this, loginEvent.getSessionData().getSessionId());
+                    break;
+                case GET_TRANSACTIONS:
+                    client.getTransactions(this, loginEvent.getSessionData().getSessionId());
+                    break;
+            }
+        } else {
+            client.getBalance(this, loginEvent.getSessionData().getSessionId());
+        }
+
         unregisterStickyEvent(loginEvent);
     }
 
@@ -108,9 +112,28 @@ public class MainActivity extends ActionBarActivity {
             case GET_TRANSACTIONS:
             case LOGIN:
                 showToast("Error de conexión. Favor de intentar más tarde");
+                break;
         }
 
         unregisterStickyEvent(faultEvent);
+    }
+
+    public void onEvent(ErrorEvent errorEvent) {
+        if ("NO EXISTE SESION".equalsIgnoreCase(errorEvent.getError())) {
+            //TODO: do below stuff
+            //if(rememberPassword()){
+            //    client.login(this, storedCardNumber, storedCardPassword, SiValeOperation.GET_BALANCE);
+            //}
+            //else {
+            //    promptForCredentials();
+            //}
+            showToast("NO SESSION ERROR. Not implemented");
+        } else {
+            //TODO: Log this don't show it;
+            showToast(errorEvent.getError());
+        }
+
+        unregisterStickyEvent(errorEvent);
     }
 
     private void showToast(String text) {
