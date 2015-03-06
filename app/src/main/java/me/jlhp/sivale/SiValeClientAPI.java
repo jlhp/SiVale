@@ -23,7 +23,7 @@ public class SiValeClientAPI {
 
     private final BaseEnvelope.Builder SoapEnvelopeBuilder = new BaseEnvelope.Builder();
 
-    public void login(Context context, String cardNumber, String password) {
+    public void login(Context context, String cardNumber, String password, AsyncHttpResponseHandler test) {
 
         BaseEnvelope loginEnvelope = SoapEnvelopeBuilder
             .setSoapOperation("login")
@@ -33,7 +33,6 @@ public class SiValeClientAPI {
             .addParameter(new EnvelopeParameter("securityLevel", "M", "xsd:string"))
             .build();
 
-        //LoginEnvelope loginEnvelope = new LoginEnvelope("", cardNumber, password, "M");
 
         StringEntity entity = null;
 
@@ -45,36 +44,6 @@ public class SiValeClientAPI {
             e.printStackTrace();
         }
 
-        SiValeClient.post(context, entity, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                IceSoapParserImpl<SessionData> parser = new IceSoapParserImpl<SessionData>(SessionData.class);
-                ByteArrayInputStream stream = new ByteArrayInputStream(responseBody);
-                SessionData sessionData = null;
-
-                try {
-                    sessionData = parser.parse(stream);
-                } catch (XMLParsingException e) {
-                    e.printStackTrace();
-                }
-
-                System.out.println();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                IceSoapParserImpl<SOAP11Fault> parser = new IceSoapParserImpl<SOAP11Fault>(SOAP11Fault.class);
-                ByteArrayInputStream stream = new ByteArrayInputStream(responseBody);
-                SOAP11Fault soap11Fault = null;
-
-                try {
-                    soap11Fault = parser.parse(stream);
-                } catch (XMLParsingException e) {
-                    e.printStackTrace();
-                }
-
-                System.out.println();
-            }
-        });
+        SiValeClient.post(context, entity, test);
     }
 }
