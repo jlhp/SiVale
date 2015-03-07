@@ -21,7 +21,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
@@ -42,16 +42,16 @@
 
                 <ImageView
                     android:id="@+id/edit"
-                    android:layout_width="match_parent"
+                    android:layout_width="40dp"
                     android:layout_height="25dp"
-                    android:textAlignment="viewEnd"
-                    android:layout_gravity="end"
-                    android:paddingLeft="260dp"
                     android:tint="@color/background_test_light_color"
-                    android:src="@mipmap/ic_edit" />
+                    android:src="@mipmap/ic_edit"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
 
                 <TextView
-                    android:id="@+id/balance"
+                    android:id="@+id/card_balance"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginBottom="10dp"
@@ -60,10 +60,10 @@
                     android:textColor="@color/background_test_light_color"
                     android:textSize="40sp"
                     android:textStyle="bold"
-                    android:text="$592.31" />
+                    android:text="$592.32" />
 
                 <TextView
-                    android:id="@+id/date"
+                    android:id="@+id/card_alias"
                     android:layout_width="wrap_content"
                     android:layout_height="15dp"
                     android:gravity="center"
@@ -72,26 +72,26 @@
                     android:textSize="@dimen/card_text_size"
                     android:text="SiVale: Compras"
                     android:layout_centerHorizontal="true"
-                    android:layout_below="@+id/balance" />
+                    android:layout_below="@+id/card_balance" />
 
                 <View
                     android:id="@+id/separator"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_below="@id/date"
+                    android:layout_below="@id/card_alias"
                     android:layout_marginTop="10dp"
                     android:background="@color/background_test_light_color"
                     android:alpha=".12" />
 
                 <TextView
-                    android:id="@+id/date2"
-                    android:layout_width="180dp"
+                    android:id="@+id/card_last_update_date"
+                    android:layout_width="200dp"
                     android:layout_height="25dp"
                     android:gravity="center"
                     android:textColor="@color/background_test_light_color"
                     android:textStyle="bold"
                     android:textSize="@dimen/card_text_size"
-                    android:text="Septiembre 12, 2013 11:59:58"
+                    android:text="Septiembre 12, 2013 11:59:58 A.M."
                     android:layout_centerHorizontal="true"
                     android:layout_below="@+id/separator" />
 
@@ -100,12 +100,12 @@
                     android:layout_height="25dp"
                     android:src="@mipmap/ic_calendar"
                     android:layout_below="@+id/separator"
-                    android:layout_toLeftOf="@id/date2"
+                    android:layout_toLeftOf="@id/card_last_update_date"
                     android:tint="@color/background_test_light_color" />
 
                 <TextView
-                    android:id="@+id/card"
-                    android:layout_width="180dp"
+                    android:id="@+id/card_number"
+                    android:layout_width="200dp"
                     android:layout_height="25dp"
                     android:gravity="center"
                     android:textColor="@color/background_test_light_color"
@@ -113,14 +113,14 @@
                     android:textSize="@dimen/card_text_size"
                     android:text="**** - **** - **** - 5214"
                     android:layout_centerHorizontal="true"
-                    android:layout_below="@+id/date2" />
+                    android:layout_below="@+id/card_last_update_date" />
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="25dp"
                     android:src="@mipmap/ic_card"
-                    android:layout_below="@+id/date2"
-                    android:layout_toLeftOf="@id/card"
+                    android:layout_below="@+id/card_last_update_date"
+                    android:layout_toLeftOf="@id/card_number"
                     android:tint="@color/background_test_light_color" />
 
                 <LinearLayout
@@ -129,9 +129,9 @@
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal"
                     android:background="@color/background_test_accent_color"
-                    android:layout_below="@id/card">
+                    android:layout_below="@id/card_number">
 
-                    <ImageView
+                <ImageView
                         android:id="@+id/aa"
                         android:layout_width="match_parent"
                         android:layout_height="25dp"

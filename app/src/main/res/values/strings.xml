@@ -16,5 +16,6 @@
     </string>
     <string name="cardview_radius_seekbar_text">Radius</string>
     <string name="cardview_elevation_seekbar_text">Elevation</string>
+    <string name="title_activity_card">CardActivity</string>
 
 </resources>

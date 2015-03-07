@@ -55,7 +55,7 @@ public class TransactionData extends SoapData {
      * correct it will send you the same amount of transactions you have registered throughout the
      * card usage, the only catch is that they will contain no data.
      */
-    private class Transaction {
+    public class Transaction {
         private BigInteger TransactionId;
         private String CardNumber;
         private Date TransactionDate;
