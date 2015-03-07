@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+ Copyright 2014 The Android Open Source Project
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<resources>
+    <color name="cardview_initial_background">#71C3DE</color>
+    <color name="android:colorPrimary">#f44336</color>
+    <color name="android:colorPrimaryDark">#b71c1c</color>
+    <color name="android:colorAccent">#f44336</color>
+
+    <color name="background_gray_color">#9e9e9e</color>
+    <color name="background_gray_light_color">#fafafa</color>
+    <color name="background_gray_accent_color">#616161</color>
+
+    <color name="background_blue_color">#2196f3</color>
+    <color name="background_blue_light_color">#e3f2fd</color>
+    <color name="background_blue_accent_color">#1565c0</color>
+
+    <color name="background_brown_color">#795548</color>
+    <color name="background_brown_light_color">#efebe9</color>
+    <color name="background_brown_accent_color">#4e342e</color>
+
+    <color name="background_orange_color">#ff5722</color>
+    <color name="background_orange_light_color">#fbe9e7</color>
+    <color name="background_orange_accent_color">#d84315</color>
+
+    <color name="background_yellow_color">#ffeb3b</color>
+    <color name="background_yellow_light_color">#fffde7</color>
+    <color name="background_yellow_accent_color">#f9a825</color>
+
+    <color name="background_green_color">#4caf50</color>
+    <color name="background_green_light_color">#e8f5e9</color>
+    <color name="background_green_accent_color">#2e7d32</color>
+
+    <color name="background_black_color">#000000</color>
+    <color name="background_black_light_color">#ffffff</color>
+    <color name="background_black_accent_color">#fafafa</color>
+
+    <color name="background_blue_grey_color">#263238</color>
+    <color name="background_blue_grey_light_color">#eceff1</color>
+    <color name="background_blue_grey_accent_color">#37474f</color>
+
+    <color name="background_test_color">#263238</color>
+    <color name="background_test_light_color">#eceff1</color>
+    <color name="background_test_accent_color">#37474f</color>
+</resources>
