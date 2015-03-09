@@ -1,6 +1,6 @@
 package me.jlhp.sivale.event;
 
-import me.jlhp.sivale.model.TransactionData;
+import me.jlhp.sivale.model.server.TransactionData;
 
 /**
  * Created by jjherrer on 03/03/2015.

@@ -15,10 +15,10 @@ import me.jlhp.sivale.event.FaultEvent;
 import me.jlhp.sivale.event.GetBalanceEvent;
 import me.jlhp.sivale.event.GetTransactionsEvent;
 import me.jlhp.sivale.event.LoginEvent;
-import me.jlhp.sivale.model.BalanceData;
-import me.jlhp.sivale.model.SessionData;
-import me.jlhp.sivale.model.SiValeData;
-import me.jlhp.sivale.model.TransactionData;
+import me.jlhp.sivale.model.server.BalanceData;
+import me.jlhp.sivale.model.server.SessionData;
+import me.jlhp.sivale.model.server.SiValeData;
+import me.jlhp.sivale.model.server.TransactionData;
 
 /**
  * Created by JOSELUIS on 3/1/2015.
@@ -39,7 +39,7 @@ public class SiValeClientAPI {
                 .addParameter(new EnvelopeParameter("num_tarjeta", cardNumber, "xsd:string"))
                 .addParameter(new EnvelopeParameter("passwd", password, "xsd:string"))
                 .addParameter(new EnvelopeParameter("securityLevel", "M", "xsd:string"))
-                .build();
+                .create();
 
         postEnvelope(context, loginEnvelope, new AsyncHttpResponseHandler() {
             @Override
@@ -63,7 +63,7 @@ public class SiValeClientAPI {
         BaseEnvelope getBalanceEnvelope = SoapEnvelopeBuilder
                 .setSoapOperation("getSaldo")
                 .addParameter(new EnvelopeParameter("P_ID_SESION", String.valueOf(sessionId), "xsd:decimal"))
-                .build();
+                .create();
 
         postEnvelope(context, getBalanceEnvelope, new AsyncHttpResponseHandler() {
             @Override
@@ -85,7 +85,7 @@ public class SiValeClientAPI {
         BaseEnvelope getTransactionsEnvelope = SoapEnvelopeBuilder
                 .setSoapOperation("getMovimientos")
                 .addParameter(new EnvelopeParameter("P_ID_SESION", String.valueOf(sessionId), "xsd:decimal"))
-                .build();
+                .create();
 
         postEnvelope(context, getTransactionsEnvelope, new AsyncHttpResponseHandler() {
             @Override

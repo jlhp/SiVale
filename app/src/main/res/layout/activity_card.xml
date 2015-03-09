@@ -2,9 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="me.jlhp.sivale.CardActivity"
-    android:background="#eceff1">
+    android:background="@color/statusbar_background">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list"

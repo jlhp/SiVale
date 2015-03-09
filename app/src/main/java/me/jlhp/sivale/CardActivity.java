@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 
-import me.jlhp.sivale.model.CardData;
+import me.jlhp.sivale.model.client.Card;
 
 
 public class CardActivity extends ActionBarActivity {
@@ -27,31 +27,31 @@ public class CardActivity extends ActionBarActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
 
-        final CardData c1 = new CardData();
+        final Card c1 = new Card();
         c1.setAlias("SiVale: Compras");
         c1.setBalance(new BigDecimal("3232.21"));
         c1.setLastUpdateDate(new Date());
         c1.setNumber("5203652185635941");
 
-        final CardData c2 = new CardData();
+        final Card c2 = new Card();
         c2.setAlias("SiVale: Restaurante");
         c2.setBalance(new BigDecimal("592.33"));
         c2.setLastUpdateDate(new Date());
         c2.setNumber("5203652185638563");
 
-        final CardData c3 = new CardData();
+        final Card c3 = new Card();
         c3.setAlias("SiVale: Stuff");
         c3.setBalance(new BigDecimal("8.21"));
         c3.setLastUpdateDate(new Date());
         c3.setNumber("5203652185638956");
 
-        final CardData c4 = new CardData();
+        final Card c4 = new Card();
         c4.setAlias("SiVale: Super Troll");
         c4.setBalance(new BigDecimal("109563.99"));
         c4.setLastUpdateDate(new Date());
         c4.setNumber("5203652185635231");
 
-        CardAdapter cardAdapter = new CardAdapter(new ArrayList<CardData>() {{
+        CardAdapter cardAdapter = new CardAdapter(new ArrayList<Card>() {{
             add(c1);
             add(c2);
             add(c3);

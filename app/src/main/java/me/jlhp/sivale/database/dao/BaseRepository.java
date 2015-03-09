@@ -6,8 +6,6 @@ package me.jlhp.sivale.database.dao;
 
 import android.content.Context;
 
-import com.enevasys.autotraffic.database.DatabaseHelper;
-import com.enevasys.autotraffic.model.MonitoringLog;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.table.TableUtils;
@@ -16,6 +14,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+
+import me.jlhp.sivale.database.DatabaseHelper;
 
 /**
  * Created by JOSELUIS on 7/10/14.

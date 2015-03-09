@@ -14,17 +14,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import me.jlhp.sivale.model.CardData;
+import me.jlhp.sivale.model.client.Card;
 
 /**
  * Created by jjherrer on 06/03/2015.
  */
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
-    private List<CardData> mCards;
+    private List<Card> mCards;
     private int mRowLayout;
     private Context mContext;
 
-    public CardAdapter(List<CardData> cards, int rowLayout, Context context) {
+    public CardAdapter(List<Card> cards, int rowLayout, Context context) {
         mCards = cards;
         mRowLayout = rowLayout;
         mContext = context;
@@ -38,7 +38,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        CardData card = mCards.get(i);
+        Card card = mCards.get(i);
 
         viewHolder.setCardBalance(card.getBalance());
         viewHolder.setCardAlias(card.getAlias());

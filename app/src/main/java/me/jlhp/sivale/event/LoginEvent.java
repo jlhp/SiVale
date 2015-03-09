@@ -1,7 +1,7 @@
 package me.jlhp.sivale.event;
 
 import me.jlhp.sivale.api.SiValeOperation;
-import me.jlhp.sivale.model.SessionData;
+import me.jlhp.sivale.model.server.SessionData;
 
 /**
  * Created by jjherrer on 03/03/2015.

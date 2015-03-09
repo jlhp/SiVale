@@ -1,6 +1,6 @@
 package me.jlhp.sivale.event;
 
-import me.jlhp.sivale.model.BalanceData;
+import me.jlhp.sivale.model.server.BalanceData;
 
 /**
  * Created by jjherrer on 03/03/2015.

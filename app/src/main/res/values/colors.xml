@@ -54,4 +54,7 @@
     <color name="background_test_color">#263238</color>
     <color name="background_test_light_color">#eceff1</color>
     <color name="background_test_accent_color">#37474f</color>
+
+    <color name="actionbar_background">#607d8b</color>
+    <color name="statusbar_background">#455a64</color>>
 </resources>

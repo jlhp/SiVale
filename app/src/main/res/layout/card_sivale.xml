@@ -5,12 +5,13 @@
     android:id="@+id/cardview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="10dp"
+    android:elevation="100dp"
     card_view:cardBackgroundColor="@color/background_test_color"
-    card_view:cardCornerRadius="5dp"
+    card_view:cardCornerRadius="2dp"
+    android:layout_marginTop="@dimen/margin_small"
     android:layout_marginLeft="@dimen/margin_small"
     android:layout_marginRight="@dimen/margin_small"
-    android:layout_marginBottom="@dimen/margin_medium">
+    android:layout_marginBottom="@dimen/margin_small">
 
     <RelativeLayout
         android:layout_width="match_parent"
