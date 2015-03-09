@@ -1,4 +1,4 @@
-package me.jlhp.sivale.model;
+package me.jlhp.sivale.model.server;
 
 /**
  * Created by jjherrer on 04/03/2015.

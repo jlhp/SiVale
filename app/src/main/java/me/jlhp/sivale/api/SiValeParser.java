@@ -5,7 +5,6 @@ import com.alexgilleran.icesoap.parser.IceSoapParser;
 import com.alexgilleran.icesoap.parser.impl.IceSoapParserImpl;
 
 import java.io.ByteArrayInputStream;
-import java.util.HashMap;
 
 /**
  * Created by jjherrer on 02/03/2015.

@@ -7,7 +7,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
-//import de.greenrobot.event.EventBus;
+import de.greenrobot.event.EventBus;
 import me.jlhp.sivale.envelope.BaseEnvelope;
 import me.jlhp.sivale.envelope.EnvelopeParameter;
 import me.jlhp.sivale.event.ErrorEvent;
@@ -39,13 +39,14 @@ public class SiValeClientAPI {
                 .addParameter(new EnvelopeParameter("num_tarjeta", cardNumber, "xsd:string"))
                 .addParameter(new EnvelopeParameter("passwd", password, "xsd:string"))
                 .addParameter(new EnvelopeParameter("securityLevel", "M", "xsd:string"))
-                .create();
+                .build();
 
         postEnvelope(context, loginEnvelope, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 SessionData sessionData = getSoapResponse(SessionData.class, responseBody);
-                if (isError(sessionData)) postEvent(new ErrorEvent(sessionData.getError(), SiValeOperation.LOGIN));
+                if (isError(sessionData))
+                    postEvent(new ErrorEvent(sessionData.getError(), SiValeOperation.LOGIN));
                 else if (retryOperation == null) postEvent(new LoginEvent(sessionData));
                 else postEvent(new LoginEvent(sessionData, retryOperation));
             }
@@ -62,7 +63,7 @@ public class SiValeClientAPI {
         BaseEnvelope getBalanceEnvelope = SoapEnvelopeBuilder
                 .setSoapOperation("getSaldo")
                 .addParameter(new EnvelopeParameter("P_ID_SESION", String.valueOf(sessionId), "xsd:decimal"))
-                .create();
+                .build();
 
         postEnvelope(context, getBalanceEnvelope, new AsyncHttpResponseHandler() {
             @Override
@@ -84,14 +85,15 @@ public class SiValeClientAPI {
         BaseEnvelope getTransactionsEnvelope = SoapEnvelopeBuilder
                 .setSoapOperation("getMovimientos")
                 .addParameter(new EnvelopeParameter("P_ID_SESION", String.valueOf(sessionId), "xsd:decimal"))
-                .create();
+                .build();
 
         postEnvelope(context, getTransactionsEnvelope, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 TransactionData transactionData = getSoapResponse(TransactionData.class, responseBody);
                 if (!isError(transactionData)) postEvent(new GetTransactionsEvent(transactionData));
-                else postEvent(new ErrorEvent(transactionData.getError(), SiValeOperation.GET_TRANSACTIONS));
+                else
+                    postEvent(new ErrorEvent(transactionData.getError(), SiValeOperation.GET_TRANSACTIONS));
             }
 
             @Override
@@ -107,7 +109,7 @@ public class SiValeClientAPI {
     }
 
     private void postEvent(Object event) {
-        //EventBus.getDefault().postSticky(event);
+        EventBus.getDefault().postSticky(event);
     }
 
     private <T> T getSoapResponse(Class<T> clazz, byte[] soapData) {

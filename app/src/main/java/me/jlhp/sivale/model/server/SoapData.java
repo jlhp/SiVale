@@ -1,4 +1,4 @@
-package me.jlhp.sivale.model;
+package me.jlhp.sivale.model.server;
 
 import com.alexgilleran.icesoap.annotation.XMLField;
 
