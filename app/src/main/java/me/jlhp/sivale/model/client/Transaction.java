@@ -8,6 +8,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -22,24 +23,25 @@ import me.jlhp.sivale.utility.Util;
  * correct it will send you the same amount of transactions you have registered throughout the
  * card usage, the only catch is that they will contain no data.
  */
+@DatabaseTable
 public class Transaction implements Parcelable {
 
     @DatabaseField(id = true)
-    private BigInteger TransactionId;
+    private BigInteger mTransactionId;
+
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
+    private Card mCard;
 
     @DatabaseField
-    private String CardNumber;
+    private Date mTransactionDate;
 
     @DatabaseField
-    private Date TransactionDate;
+    private BigDecimal mAmount;
 
     @DatabaseField
-    private BigDecimal Amount;
+    private String mCommerce;
 
-    @DatabaseField
-    private String Commerce;
-
-    private String SpacedCommerce;
+    private String mSpacedCommerce;
 
     public Transaction(String[] data) {
         if (data == null || data.length < 5) {
@@ -47,18 +49,18 @@ public class Transaction implements Parcelable {
         }
 
         if (!Util.isStringEmptyOrNull(data[0])) setTransactionId(data[0]);
-        if (!Util.isStringEmptyOrNull(data[1])) setCardNumber(data[1].trim());
+        if (!Util.isStringEmptyOrNull(data[1])) setCard(data[1].trim());
         if (!Util.isStringEmptyOrNull(data[2])) setTransactionDate(data[2]);
         if (!Util.isStringEmptyOrNull(data[3])) setAmount(data[3]);
         if (!Util.isStringEmptyOrNull(data[4])) setCommerce(data[4].trim());
     }
 
     public BigInteger getTransactionId() {
-        return TransactionId;
+        return mTransactionId;
     }
 
     public void setTransactionId(BigInteger transactionId) {
-        TransactionId = transactionId;
+        mTransactionId = transactionId;
     }
 
     public void setTransactionId(String transactionId) {
@@ -71,41 +73,45 @@ public class Transaction implements Parcelable {
             ex.printStackTrace();
         }
 
-        TransactionId = b;
+        mTransactionId = b;
     }
 
-    public String getCardNumber() {
-        return CardNumber;
+    public Card getCard() {
+        return mCard;
     }
 
-    public void setCardNumber(String cardNumber) {
-        CardNumber = cardNumber;
+    public void setCard(Card card) {
+        mCard = card;
+    }
+
+    public void setCard(String cardNumber) {
+        this.mCard = new Card(cardNumber);
     }
 
     public Date getTransactionDate() {
-        return TransactionDate;
+        return mTransactionDate;
     }
 
     public void setTransactionDate(Date transactionDate) {
-        TransactionDate = transactionDate;
+        mTransactionDate = transactionDate;
     }
 
     public void setTransactionDate(String transactionDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
         try {
-            TransactionDate = simpleDateFormat.parse(transactionDate.trim());
+            mTransactionDate = simpleDateFormat.parse(transactionDate.trim());
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
 
     public BigDecimal getAmount() {
-        return Amount;
+        return mAmount;
     }
 
     public void setAmount(BigDecimal amount) {
-        Amount = amount;
+        mAmount = amount;
     }
 
     public void setAmount(String amount) {
@@ -118,25 +124,25 @@ public class Transaction implements Parcelable {
             ex.printStackTrace();
         }
 
-        Amount = d;
+        mAmount = d;
     }
 
     public String getCommerce() {
-        return Commerce;
+        return mCommerce;
     }
 
     public void setCommerce(String commerce) {
-        Commerce = commerce;
+        mCommerce = commerce;
     }
 
     public String getSpacedCommerce() {
-        if (SpacedCommerce != null) return SpacedCommerce;
+        if (mSpacedCommerce != null) return mSpacedCommerce;
 
-        SpacedCommerce = Commerce;
+        mSpacedCommerce = mCommerce;
 
         //Contains double space? Then it isn't correctly spaced
-        if (!Util.isStringEmptyOrNull(SpacedCommerce) && SpacedCommerce.contains("  ")) {
-            String[] words = SpacedCommerce.split(" ");
+        if (!Util.isStringEmptyOrNull(mSpacedCommerce) && mSpacedCommerce.contains("  ")) {
+            String[] words = mSpacedCommerce.split(" ");
 
             if (words.length > 0) {
                 StringBuilder b = new StringBuilder();
@@ -149,11 +155,11 @@ public class Transaction implements Parcelable {
                 }
 
                 b.deleteCharAt(b.length() - 1);
-                SpacedCommerce = b.toString();
+                mSpacedCommerce = b.toString();
             }
         }
 
-        return SpacedCommerce;
+        return mSpacedCommerce;
     }
 
     @Override
@@ -163,22 +169,22 @@ public class Transaction implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeSerializable(this.TransactionId);
-        dest.writeString(this.CardNumber);
-        dest.writeLong(TransactionDate != null ? TransactionDate.getTime() : -1);
-        dest.writeSerializable(this.Amount);
-        dest.writeString(this.Commerce);
-        dest.writeString(this.SpacedCommerce);
+        dest.writeSerializable(this.mTransactionId);
+        dest.writeParcelable(this.mCard, 0);
+        dest.writeLong(mTransactionDate != null ? mTransactionDate.getTime() : -1);
+        dest.writeSerializable(this.mAmount);
+        dest.writeString(this.mCommerce);
+        dest.writeString(this.mSpacedCommerce);
     }
 
     private Transaction(Parcel in) {
-        this.TransactionId = (BigInteger) in.readSerializable();
-        this.CardNumber = in.readString();
+        this.mTransactionId = (BigInteger) in.readSerializable();
+        this.mCard = in.readParcelable(Card.class.getClassLoader());
         long tmpTransactionDate = in.readLong();
-        this.TransactionDate = tmpTransactionDate == -1 ? null : new Date(tmpTransactionDate);
-        this.Amount = (BigDecimal) in.readSerializable();
-        this.Commerce = in.readString();
-        this.SpacedCommerce = in.readString();
+        this.mTransactionDate = tmpTransactionDate == -1 ? null : new Date(tmpTransactionDate);
+        this.mAmount = (BigDecimal) in.readSerializable();
+        this.mCommerce = in.readString();
+        this.mSpacedCommerce = in.readString();
     }
 
     public static final Creator<Transaction> CREATOR = new Creator<Transaction>() {

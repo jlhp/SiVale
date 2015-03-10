@@ -130,6 +130,11 @@ public class Card implements Parcelable {
     public Card() {
     }
 
+    public Card(String cardNumber) {
+        this.mNumber = cardNumber;
+    }
+
+
     private Card(Parcel in) {
         this.mBalance = (BigDecimal) in.readSerializable();
         this.mAlias = in.readString();
