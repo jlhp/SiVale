@@ -11,10 +11,10 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import me.jlhp.sivale.utility.Util;
 
@@ -27,7 +27,7 @@ import me.jlhp.sivale.utility.Util;
 public class Transaction implements Parcelable {
 
     @DatabaseField(id = true)
-    private BigInteger mTransactionId;
+    private String mTransactionId;
 
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Card mCard;
@@ -48,32 +48,38 @@ public class Transaction implements Parcelable {
             throw new IllegalArgumentException("'data' must not be null and should contain at least 5 elements");
         }
 
-        if (!Util.isStringEmptyOrNull(data[0])) setTransactionId(data[0]);
+        if (!Util.isStringEmptyNullOrStringNull(data[0])) setTransactionId(data[0]);
         if (!Util.isStringEmptyOrNull(data[1])) setCard(data[1].trim());
         if (!Util.isStringEmptyOrNull(data[2])) setTransactionDate(data[2]);
         if (!Util.isStringEmptyOrNull(data[3])) setAmount(data[3]);
         if (!Util.isStringEmptyOrNull(data[4])) setCommerce(data[4].trim());
+        if(Util.isStringEmptyOrNull(mTransactionId)) setDefaultTransactionId();
     }
 
-    public BigInteger getTransactionId() {
+    public Transaction() {}
+
+    public String getTransactionId() {
         return mTransactionId;
     }
 
-    public void setTransactionId(BigInteger transactionId) {
+    public void setTransactionId(String transactionId) {
         mTransactionId = transactionId;
     }
 
-    public void setTransactionId(String transactionId) {
-        BigInteger b = null;
+    public void setDefaultTransactionId() {
+        mTransactionId = "";
 
-        try {
-            b = Util.isStringEmptyOrNull(transactionId) ? new BigInteger("-1") :
-                    new BigInteger(transactionId.trim());
-        } catch (NumberFormatException ex) {
-            ex.printStackTrace();
+        if(mTransactionDate != null) {
+            mTransactionId += mTransactionDate.toString();
         }
 
-        mTransactionId = b;
+        if(mAmount.toString() != null) {
+            mTransactionId += mAmount.toString();
+        }
+
+        if(mCommerce != null) {
+            mTransactionId += mCommerce;
+        }
     }
 
     public Card getCard() {
@@ -88,6 +94,10 @@ public class Transaction implements Parcelable {
         this.mCard = new Card(cardNumber);
     }
 
+    public void setCard(int cardId) {
+        this.mCard = new Card(cardId);
+    }
+
     public Date getTransactionDate() {
         return mTransactionDate;
     }
@@ -97,12 +107,23 @@ public class Transaction implements Parcelable {
     }
 
     public void setTransactionDate(String transactionDate) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
 
         try {
-            mTransactionDate = simpleDateFormat.parse(transactionDate.trim());
+            mTransactionDate = sdf.parse(transactionDate.trim());
         } catch (ParseException e) {
-            e.printStackTrace();
+            if(e.getMessage().contains("Unparseable date")) {
+                SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd HHmmss", Locale.US);
+
+                try {
+                    mTransactionDate = sdf2.parse(transactionDate.trim());
+                } catch (ParseException e2) {
+                    e2.printStackTrace();
+                }
+            }
+            else {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -115,7 +136,7 @@ public class Transaction implements Parcelable {
     }
 
     public void setAmount(String amount) {
-        BigDecimal d = null;
+        BigDecimal d = new BigDecimal(-1);
 
         try {
             d = Util.isStringEmptyOrNull(amount) ? BigDecimal.valueOf(-1) :
@@ -124,7 +145,8 @@ public class Transaction implements Parcelable {
             ex.printStackTrace();
         }
 
-        mAmount = d;
+        mAmount = d.compareTo(BigDecimal.valueOf(0)) < 0 ?
+                  d.multiply(BigDecimal.valueOf(-1)) : d;
     }
 
     public String getCommerce() {
@@ -169,20 +191,21 @@ public class Transaction implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeSerializable(this.mTransactionId);
+        if(mCard != null) mCard.setTransactions(null);
+        dest.writeString(this.mTransactionId);
         dest.writeParcelable(this.mCard, 0);
         dest.writeLong(mTransactionDate != null ? mTransactionDate.getTime() : -1);
-        dest.writeSerializable(this.mAmount);
+        dest.writeDouble(this.mAmount.doubleValue());
         dest.writeString(this.mCommerce);
         dest.writeString(this.mSpacedCommerce);
     }
 
     private Transaction(Parcel in) {
-        this.mTransactionId = (BigInteger) in.readSerializable();
+        this.mTransactionId = in.readString();
         this.mCard = in.readParcelable(Card.class.getClassLoader());
         long tmpTransactionDate = in.readLong();
         this.mTransactionDate = tmpTransactionDate == -1 ? null : new Date(tmpTransactionDate);
-        this.mAmount = (BigDecimal) in.readSerializable();
+        this.mAmount = new BigDecimal(in.readDouble());
         this.mCommerce = in.readString();
         this.mSpacedCommerce = in.readString();
     }

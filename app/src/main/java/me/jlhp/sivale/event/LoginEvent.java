@@ -6,17 +6,23 @@ import me.jlhp.sivale.model.server.SessionData;
 /**
  * Created by jjherrer on 03/03/2015.
  */
-public class LoginEvent {
+public class LoginEvent implements CallerIdRequired, me.jlhp.sivale.event.NextOperations {
     private SessionData SessionData;
-    private SiValeOperation RetryOperation;
+    private int CallerId;
+    private SiValeOperation[] NextOperations;
 
     public LoginEvent(SessionData sessionData) {
-        SessionData = sessionData;
+        this(sessionData, (SiValeOperation) null);
     }
 
-    public LoginEvent(SessionData sessionData, SiValeOperation operation) {
+    public LoginEvent(SessionData sessionData, SiValeOperation... operations) {
+        this(sessionData, 0, operations);
+    }
+
+    public LoginEvent(SessionData sessionData, int callerId, SiValeOperation... nextOperations) {
         SessionData = sessionData;
-        RetryOperation = operation;
+        CallerId = callerId;
+        NextOperations = nextOperations;
     }
 
     public SessionData getSessionData() {
@@ -27,15 +33,28 @@ public class LoginEvent {
         SessionData = sessionData;
     }
 
-    public SiValeOperation getRetryOperation() {
-        return RetryOperation;
+    @Override
+    public int getCallerId() {
+        return CallerId;
     }
 
-    public void setRetryOperation(SiValeOperation retryOperation) {
-        RetryOperation = retryOperation;
+    @Override
+    public void setCallerId(int callerId) {
+        CallerId = callerId;
     }
 
-    public boolean hasRetryOperation() {
-        return RetryOperation != null;
+    @Override
+    public SiValeOperation[] getNextOperations() {
+        return NextOperations;
+    }
+
+    @Override
+    public void setNextOperations(SiValeOperation... nextOperations) {
+        NextOperations = nextOperations;
+    }
+
+    @Override
+    public boolean hasNextOperation(){
+        return NextOperations != null && NextOperations.length > 0;
     }
 }

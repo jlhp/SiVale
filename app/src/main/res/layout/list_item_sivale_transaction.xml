@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="100dp"
+    card_view:cardBackgroundColor="@color/background_test_color"
+    card_view:cardCornerRadius="2dp"
+    android:layout_marginTop="@dimen/margin_small"
+    android:layout_marginLeft="@dimen/margin_small"
+    android:layout_marginRight="@dimen/margin_small"
+    android:layout_marginBottom="@dimen/margin_small">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/amount"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:textColor="@color/background_test_light_color"
+            android:background="@color/background_blue_grey_accent_color"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:text="$592.32" />
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/amount"
+            android:layout_marginTop="0dp"
+            android:background="@color/background_test_light_color"
+            android:alpha=".12" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="230dp"
+            android:layout_height="25dp"
+            android:gravity="center"
+            android:textColor="@color/background_test_light_color"
+            android:textStyle="bold"
+            android:textSize="@dimen/card_text_size"
+            android:text="Septiembre 12, 2013 11:59:58 A.M."
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/separator" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:src="@mipmap/ic_calendar"
+            android:layout_below="@+id/separator"
+            android:layout_toLeftOf="@id/date"
+            android:tint="@color/background_test_light_color" />
+
+        <TextView
+            android:id="@+id/commerce"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:gravity="center"
+            android:textColor="@color/background_test_light_color"
+            android:textStyle="bold"
+            android:textSize="@dimen/card_text_size"
+            android:text="MISTER SUSHI ZAPOPAN JAL JA MX"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/date" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:src="@mipmap/ic_building"
+            android:layout_below="@+id/date"
+            android:layout_toLeftOf="@id/commerce"
+            android:tint="@color/background_test_light_color" />
+
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

@@ -17,9 +17,6 @@ import java.util.concurrent.Callable;
 
 import me.jlhp.sivale.database.DatabaseHelper;
 
-/**
- * Created by JOSELUIS on 7/10/14.
- */
 public abstract class BaseRepository<T> {
     DatabaseHelper databaseHelper;
     RuntimeExceptionDao<T, Integer> dao;
@@ -42,6 +39,15 @@ public abstract class BaseRepository<T> {
     public int create(T item) {
         try {
             return dao.create(item);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int createOrUpdate(T item) {
+        try {
+            return dao.createOrUpdate(item).getNumLinesChanged();
         } catch (Exception e) {
             e.printStackTrace();
         }

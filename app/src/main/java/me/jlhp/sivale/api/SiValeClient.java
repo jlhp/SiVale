@@ -15,9 +15,14 @@ import me.jlhp.sivale.envelope.BaseEnvelope;
  * Created by JOSELUIS on 3/1/2015.
  */
 public class SiValeClient {
+    public static final int CONNECTION_TIMEOUT = 5 * 1000;
     private static final String BASE_URL = "http://148.223.134.18:8888/bancamovil/WebMethods";
 
     private static AsyncHttpClient client = new AsyncHttpClient();
+
+    public SiValeClient() {
+        client.setTimeout(CONNECTION_TIMEOUT);
+    }
 
     public static void post(Context context, BaseEnvelope envelope, ResponseHandlerInterface responseHandler) {
         client.post(context, getAbsoluteUrl(), soapEnvelope2StringEntity(envelope), "text/xml", responseHandler);

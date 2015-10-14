@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 
 import de.greenrobot.event.EventBus;
-import me.jlhp.sivale.api.SiValeClientAPI;
+import me.jlhp.sivale.api.SiValeAPI;
 import me.jlhp.sivale.event.ErrorEvent;
 import me.jlhp.sivale.event.FaultEvent;
 import me.jlhp.sivale.event.GetBalanceEvent;
@@ -23,7 +23,7 @@ import me.jlhp.sivale.event.LoginEvent;
 public class MainActivity extends ActionBarActivity {
 
     private AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-    private SiValeClientAPI client = new SiValeClientAPI();
+    private SiValeAPI client = new SiValeAPI();
 
     Button b;
     TextView t1;
@@ -45,7 +45,7 @@ public class MainActivity extends ActionBarActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                client.login(MainActivity.this, e2.getText().toString(), e1.getText().toString());
+                //client.login(MainActivity.this, e2.getText().toString(), e1.getText().toString());
             }
         });
     }
@@ -89,34 +89,34 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    public void onEvent(LoginEvent loginEvent) {
-        if (loginEvent.hasRetryOperation()) {
-            switch (loginEvent.getRetryOperation()) {
-                case GET_BALANCE:
-                    client.getBalance(this, loginEvent.getSessionData().getSessionId());
-                    break;
-                case GET_TRANSACTIONS:
-                    client.getTransactions(this, loginEvent.getSessionData().getSessionId());
-                    break;
-            }
-        } else {
-            client.getBalance(this, loginEvent.getSessionData().getSessionId());
-        }
-
-        unregisterStickyEvent(loginEvent);
-    }
-
-    public void onEvent(FaultEvent faultEvent) {
-        switch (faultEvent.getOperation()) {
-            case GET_BALANCE:
-            case GET_TRANSACTIONS:
-            case LOGIN:
-                showToast("Error de conexión. Favor de intentar más tarde");
-                break;
-        }
-
-        unregisterStickyEvent(faultEvent);
-    }
+    //public void onEvent(LoginEvent loginEvent) {
+    //    if (loginEvent.hasNextOperation()) {
+    //        switch (loginEvent.getNextOperations()) {
+    //            case GET_BALANCE:
+    //                client.getBalance(this, loginEvent.getSessionData().getSessionId());
+    //                break;
+    //            case GET_TRANSACTIONS:
+    //                client.getTransactions(this, loginEvent.getSessionData().getSessionId());
+    //                break;
+    //        }
+    //    } else {
+    //        client.getBalance(this, loginEvent.getSessionData().getSessionId());
+    //    }
+//
+    //    unregisterStickyEvent(loginEvent);
+    //}
+//
+    //public void onEvent(FaultEvent faultEvent) {
+    //    switch (faultEvent.getOperation()) {
+    //        case GET_BALANCE:
+    //        case GET_TRANSACTIONS:
+    //        case LOGIN:
+    //            showToast("Error de conexión. Favor de intentar más tarde");
+    //            break;
+    //    }
+//
+    //    unregisterStickyEvent(faultEvent);
+    //}
 
     public void onEvent(ErrorEvent errorEvent) {
         if ("NO EXISTE SESION".equalsIgnoreCase(errorEvent.getError())) {

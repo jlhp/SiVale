@@ -4,5 +4,16 @@
     <style name="AppTheme" parent="CustomActionBarTheme">
         <item name="colorPrimary">@color/actionbar_background</item>
         <item name="colorPrimaryDark">@color/statusbar_background</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="CardDataDialogStyle" parent="@style/Theme.AppCompat.Light.Dialog" >
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
     </style>
 </resources>

@@ -1,17 +1,21 @@
 #
-# generated on 2015/03/09 01:24:16
+# generated on 2015/10/12 12:26:34
 #
 # --table-start--
 dataClass=me.jlhp.sivale.model.client.Card
 tableName=card
 # --table-fields-start--
 # --field-start--
+fieldName=mId
+generatedId=true
+# --field-end--
+# --field-start--
 fieldName=mNumber
-id=true
+canBeNull=false
+unique=true
 # --field-end--
 # --field-start--
 fieldName=mBalance
-canBeNull=false
 # --field-end--
 # --field-start--
 fieldName=mAlias
@@ -21,8 +25,7 @@ fieldName=mLastUpdateDate
 # --field-end--
 # --field-start--
 fieldName=mTransactions
-foreign=true
-foreignAutoRefresh=true
+foreignCollection=true
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -32,20 +35,22 @@ dataClass=me.jlhp.sivale.model.client.Transaction
 tableName=transaction
 # --table-fields-start--
 # --field-start--
-fieldName=TransactionId
+fieldName=mTransactionId
 id=true
 # --field-end--
 # --field-start--
-fieldName=CardNumber
+fieldName=mCard
+foreign=true
+foreignAutoRefresh=true
 # --field-end--
 # --field-start--
-fieldName=TransactionDate
+fieldName=mTransactionDate
 # --field-end--
 # --field-start--
-fieldName=Amount
+fieldName=mAmount
 # --field-end--
 # --field-start--
-fieldName=Commerce
+fieldName=mCommerce
 # --field-end--
 # --table-fields-end--
 # --table-end--

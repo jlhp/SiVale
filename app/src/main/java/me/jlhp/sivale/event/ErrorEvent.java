@@ -5,13 +5,26 @@ import me.jlhp.sivale.api.SiValeOperation;
 /**
  * Created by jjherrer on 04/03/2015.
  */
-public class ErrorEvent {
+public class ErrorEvent implements CallerIdRequired, CurrentOperation, NextOperations {
     private String Error;
-    private SiValeOperation Operation;
+    private SiValeOperation CurrentOperation;
+    private SiValeOperation[] NextOperations;
+    private int CallerId;
 
-    public ErrorEvent(String error, SiValeOperation operation) {
+    public ErrorEvent(String error, int callerId) {
+        this(error, callerId, null);
+    }
+
+    public ErrorEvent(String error, int callerId, SiValeOperation currentOperation) {
+        this(error, callerId, currentOperation, (SiValeOperation) null);
+    }
+
+    public ErrorEvent(String error, int callerId,
+                      SiValeOperation currentOperation, SiValeOperation... nextOperations) {
         Error = error;
-        Operation = operation;
+        CallerId = callerId;
+        CurrentOperation = currentOperation;
+        NextOperations = nextOperations;
     }
 
     public String getError() {
@@ -22,11 +35,38 @@ public class ErrorEvent {
         Error = error;
     }
 
-    public SiValeOperation getOperation() {
-        return Operation;
+    @Override
+    public SiValeOperation getCurrentOperation() {
+        return CurrentOperation;
     }
 
-    public void setOperation(SiValeOperation operation) {
-        Operation = operation;
+    @Override
+    public void setCurrentOperation(SiValeOperation currentOperation) {
+        CurrentOperation = currentOperation;
+    }
+
+    @Override
+    public SiValeOperation[] getNextOperations() {
+        return NextOperations;
+    }
+
+    @Override
+    public void setNextOperations(SiValeOperation... nextOperations) {
+        NextOperations = nextOperations;
+    }
+
+    @Override
+    public boolean hasNextOperation(){
+        return NextOperations != null && NextOperations.length > 0;
+    }
+
+    @Override
+    public int getCallerId() {
+        return CallerId;
+    }
+
+    @Override
+    public void setCallerId(int callerId) {
+        CallerId = callerId;
     }
 }

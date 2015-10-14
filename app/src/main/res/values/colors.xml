@@ -15,9 +15,6 @@
 -->
 <resources>
     <color name="cardview_initial_background">#71C3DE</color>
-    <color name="android:colorPrimary">#f44336</color>
-    <color name="android:colorPrimaryDark">#b71c1c</color>
-    <color name="android:colorAccent">#f44336</color>
 
     <color name="background_gray_color">#9e9e9e</color>
     <color name="background_gray_light_color">#fafafa</color>
@@ -56,5 +53,5 @@
     <color name="background_test_accent_color">#37474f</color>
 
     <color name="actionbar_background">#607d8b</color>
-    <color name="statusbar_background">#455a64</color>>
+    <color name="statusbar_background">#455a64</color>
 </resources>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SiVale</string>
+    <string name="app_name">SiVale+</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -16,7 +16,14 @@
     </string>
     <string name="cardview_radius_seekbar_text">Radius</string>
     <string name="cardview_elevation_seekbar_text">Elevation</string>
-    <string name="title_activity_card">CardActivity</string>
+    <string name="title_activity_card">SiVale+</string>
     <string name="hawk"><![CDATA[\@(M*NDGO(RMY^BI&O*Y(I^&BURUI&*TI^rtgrtgreth436hx452fqw34@]]></string>
+    <string name="unknown_error">Ocurrió un error desconocido. Por favor intente más tarde.</string>
+    <string name="message_show_transactions">Mostrar Transacciones</string>
+    <string name="message_update_card">Actualizar Tarjeta</string>
+    <string name="unknown_fault">Error desconocido</string>
+    <string name="invalid_session">NO EXISTE SESION</string>
+    <string name="title_activity_card_details">CardDetailsActivity</string>
+    <string name="title_activity_transaction">Transacciones</string>
 
 </resources>
