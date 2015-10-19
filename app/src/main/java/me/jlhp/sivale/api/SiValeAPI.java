@@ -27,6 +27,7 @@ import me.jlhp.sivale.model.server.TransactionData;
 public class SiValeAPI {
 
     private final BaseEnvelope.Builder SoapEnvelopeBuilder = new BaseEnvelope.Builder();
+    private boolean mSyncMode = false;
 
     public void login(Context context, String cardNumber, String password, AsyncHttpResponseHandler handler) {
         BaseEnvelope loginEnvelope = SoapEnvelopeBuilder
@@ -60,7 +61,11 @@ public class SiValeAPI {
         postEnvelope(context, getTransactionsEnvelope, handler);
     }
 
+    public void setSyncMode(boolean syncMode) {
+        mSyncMode = syncMode;
+    }
+
     private void postEnvelope(Context context, BaseEnvelope envelope, AsyncHttpResponseHandler responseHandler) {
-        SiValeClient.post(context, envelope, responseHandler);
+        SiValeClient.post(context, envelope, responseHandler, mSyncMode);
     }
 }

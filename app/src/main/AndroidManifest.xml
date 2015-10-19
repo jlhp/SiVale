@@ -15,6 +15,16 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
+        <receiver
+            android:name="me.jlhp.sivale.updater.SiValeAlarm"
+            android:process=":remote" >
+        </receiver>
+
+        <service
+            android:name="me.jlhp.sivale.updater.SiValeService"
+            android:exported="false" />
+
         <activity
             android:name=".CardActivity" >
             <intent-filter>
@@ -22,11 +32,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" >
         </activity>
 
         <meta-data

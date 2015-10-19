@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import me.jlhp.sivale.event.CardOperation;
 import me.jlhp.sivale.model.client.Card;
 import me.jlhp.sivale.utility.Util;
 
@@ -25,7 +26,7 @@ public class CardDataDialog extends DialogFragment implements View.OnClickListen
 
     private OnCardDataListener mListener;
     private Card mCard;
-    private boolean mUpdating;
+    private CardOperation mCardOperation;
 
     private View vCardLayout;
     private EditText vCardNumber;
@@ -55,7 +56,7 @@ public class CardDataDialog extends DialogFragment implements View.OnClickListen
             mCard.setPassword(cardPassword);
             mCard.setAlias(cardAlias);
 
-            mListener.onCardData(mCard, mUpdating);
+            mListener.onCardData(mCard, mCardOperation);
             dismiss();
         }
     }
@@ -77,7 +78,7 @@ public class CardDataDialog extends DialogFragment implements View.OnClickListen
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle args = getArguments();
 
-        mUpdating = false;
+        mCardOperation = CardOperation.ADD_DATA;
         mCard = args != null ? (Card) args.getParcelable(PARAMETER_CARD) : null;
         mListener = (OnCardDataListener) getActivity();
 
@@ -88,7 +89,7 @@ public class CardDataDialog extends DialogFragment implements View.OnClickListen
         vCardAlias = (EditText) vCardLayout.findViewById(R.id.card_alias);
 
         if(mCard != null) {
-            mUpdating = true;
+            mCardOperation = CardOperation.UPDATE_DATA;
             vCardNumber.setText(mCard.getNumber());
             vCardPassword.setText(mCard.getPassword());
             vCardAlias.setText(mCard.getAlias());
@@ -108,10 +109,10 @@ public class CardDataDialog extends DialogFragment implements View.OnClickListen
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder
-            .setTitle("Ingrese los datos de la tarjeta")
-            .setView(vCardLayout)
-            .setPositiveButton(mUpdating ? "Editar" : "Crear", null)
-            .setNegativeButton("Cancelar", null);
+                .setTitle("Ingrese los datos de la tarjeta")
+                .setView(vCardLayout)
+                .setPositiveButton(mCardOperation == CardOperation.UPDATE_DATA ? "Editar" : "Crear", null)
+                .setNegativeButton("Cancelar", null);
 
         return builder.create();
     }
@@ -125,7 +126,6 @@ public class CardDataDialog extends DialogFragment implements View.OnClickListen
     }
 
     public interface OnCardDataListener {
-        void onCardData(Card card, boolean updating);
+        void onCardData(Card card, CardOperation cardOperation);
     }
 }
-

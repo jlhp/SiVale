@@ -150,4 +150,9 @@ public class SessionData implements SiValeData {
     public String getError() {
         return ErrorDescription;
     }
+
+    @Override
+    public boolean isSessionExpired() {
+        return "NO EXISTE SESION".equalsIgnoreCase(getError());
+    }
 }

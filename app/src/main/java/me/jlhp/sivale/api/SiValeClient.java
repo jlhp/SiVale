@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.ResponseHandlerInterface;
+import com.loopj.android.http.SyncHttpClient;
 
 import org.apache.http.entity.StringEntity;
 
@@ -19,13 +20,20 @@ public class SiValeClient {
     private static final String BASE_URL = "http://148.223.134.18:8888/bancamovil/WebMethods";
 
     private static AsyncHttpClient client = new AsyncHttpClient();
+    private static SyncHttpClient syncClient = new SyncHttpClient();
 
     public SiValeClient() {
         client.setTimeout(CONNECTION_TIMEOUT);
     }
 
-    public static void post(Context context, BaseEnvelope envelope, ResponseHandlerInterface responseHandler) {
-        client.post(context, getAbsoluteUrl(), soapEnvelope2StringEntity(envelope), "text/xml", responseHandler);
+    public static void post(Context context, BaseEnvelope envelope, ResponseHandlerInterface responseHandler, boolean mSyncMode) {
+        if(mSyncMode) {
+            responseHandler.setUseSynchronousMode(true);
+            syncClient.post(context, getAbsoluteUrl(), soapEnvelope2StringEntity(envelope), "text/xml", responseHandler);
+        }
+        else{
+            client.post(context, getAbsoluteUrl(), soapEnvelope2StringEntity(envelope), "text/xml", responseHandler);
+        }
     }
 
     private static String getAbsoluteUrl() {

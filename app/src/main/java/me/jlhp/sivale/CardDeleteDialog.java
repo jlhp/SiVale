@@ -51,11 +51,11 @@ public class CardDeleteDialog extends DialogFragment implements View.OnClickList
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder
-            .setIcon(R.mipmap.ic_remove_big)
-            .setTitle("Borrar tarjeta")
-            .setMessage("Deseas borrar la tarjeta: '" + mCard.getAlias() + "'?")
-            .setPositiveButton("Sí", null)
-            .setNegativeButton("No", null);
+                .setIcon(R.mipmap.ic_remove_big)
+                .setTitle("Borrar tarjeta")
+                .setMessage("Deseas borrar la tarjeta: '" + mCard.getAlias() + "'?")
+                .setPositiveButton("Sí", null)
+                .setNegativeButton("No", null);
 
         return builder.create();
     }
@@ -69,4 +69,3 @@ public class CardDeleteDialog extends DialogFragment implements View.OnClickList
         void onCardDelete(Card card);
     }
 }
-

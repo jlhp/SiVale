@@ -16,12 +16,12 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 import me.jlhp.sivale.event.CardClickEvent;
+import me.jlhp.sivale.event.CardOperation;
 import me.jlhp.sivale.model.client.Card;
 
 /**
@@ -58,10 +58,10 @@ public
         viewHolder.setCardLastUpdateDate(card.getLastUpdateDate());
         viewHolder.setCardNumber(card.getNumber());
 
-        viewHolder.setListener(new ViewHolder.OnCardClickListener() {
+        viewHolder.setListener(new ViewHolder.OnViewClickListener() {
             @Override
-            public void onCardClick(View v) {
-                EventBus.getDefault().post(new CardClickEvent(getOperation(v), card));
+            public void onViewClick(View v) {
+                ((OnCardClickListener) mContext).onCardClick(card, getOperation(v));
             }
         });
     }
@@ -91,7 +91,7 @@ public
         if(!mCards.isEmpty()) {
             for(Card c : mCards) {
                 if(card.equals(c)) {
-                    card.update(c);
+                    c.update(card);
                     break;
                 }
             }
@@ -104,18 +104,22 @@ public
         return mCards;
     }
 
-    private CardClickEvent.CardOperation getOperation(@NonNull View v) {
+    private CardOperation getOperation(@NonNull View v) {
         if(v.getId() == R.id.card_edit) {
-            return CardClickEvent.CardOperation.EDIT_CARD;
+            return CardOperation.EDIT_CARD;
         }
         else if(v.getId() == R.id.card_update) {
-            return CardClickEvent.CardOperation.UPDATE_DATA;
+            return CardOperation.UPDATE_DATA;
         }
         else if(v.getId() == R.id.card_delete) {
-            return CardClickEvent.CardOperation.DELETE_CARD;
+            return CardOperation.DELETE_CARD;
         }
 
-        return CardClickEvent.CardOperation.SHOW_TRANSACTIONS;
+        return CardOperation.SHOW_TRANSACTIONS;
+    }
+
+    public interface OnCardClickListener {
+        void onCardClick(Card card, CardOperation cardOperation);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -132,7 +136,7 @@ public
         private ImageView vCardTransactions;
         private ImageView vCardDelete;
 
-        private OnCardClickListener mListener;
+        private OnViewClickListener mListener;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -160,7 +164,7 @@ public
                 vCardUpdate.startAnimation(rotation);
             }
 
-            mListener.onCardClick(v);
+            mListener.onViewClick(v);
         }
 
         public void setCardBalance(BigDecimal balance) {
@@ -197,12 +201,12 @@ public
             this.vCardNumber.setText("**** - **** - **** - " + cardNumber.substring(12));
         }
 
-        public void setListener(OnCardClickListener l) {
+        public void setListener(OnViewClickListener l) {
             mListener = l;
         }
 
-        public interface OnCardClickListener {
-            void onCardClick(View v);
+        public interface OnViewClickListener {
+            void onViewClick(View v);
         }
     }
 }

@@ -34,8 +34,4 @@ public
     public void setCard(Card mCard) {
         this.mCard = mCard;
     }
-
-    public enum CardOperation {
-        UPDATE_DATA, SHOW_TRANSACTIONS, EDIT_CARD, DELETE_CARD
-    }
 }

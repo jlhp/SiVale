@@ -184,6 +184,10 @@ public class Transaction implements Parcelable {
         return mSpacedCommerce;
     }
 
+    public boolean isValid() {
+        return mTransactionDate != null && mAmount != null;
+    }
+
     @Override
     public int describeContents() {
         return 0;

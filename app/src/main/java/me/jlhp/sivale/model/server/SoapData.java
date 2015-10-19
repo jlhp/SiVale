@@ -14,6 +14,11 @@ public class SoapData implements SiValeData {
     }
 
     @Override
+    public boolean isSessionExpired() {
+        return "NO EXISTE SESION".equalsIgnoreCase(getError());
+    }
+
+    @Override
     public boolean isError() {
         return SessionData != null && SessionData.isError();
     }

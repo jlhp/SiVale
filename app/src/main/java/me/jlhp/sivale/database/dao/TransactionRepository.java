@@ -2,11 +2,8 @@ package me.jlhp.sivale.database.dao;
 
 import android.content.Context;
 
-import com.j256.ormlite.stmt.Where;
-
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 
 import me.jlhp.sivale.model.client.Card;
 import me.jlhp.sivale.model.client.Transaction;
@@ -26,7 +23,7 @@ public class TransactionRepository extends BaseRepository<Transaction> {
 
         for(Transaction transaction : transactions) {
             if(cardId > 0) transaction.setCard(cardId);
-            rows += create(transaction);
+            if(transaction.isValid()) rows += create(transaction);
         }
 
         return rows;
