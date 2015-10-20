@@ -104,6 +104,7 @@ public
         onEventMainThread(cardOperationEvent);
 
         if(cardOperation == CardOperation.ADD_DATA) {
+            addCard(card);
             updateCard(card);
         }
     }
@@ -112,6 +113,7 @@ public
     public void onCardDelete(Card card) {
         CardOperationEvent cardOperationEvent = new CardOperationEvent(card, CardOperation.DELETE_CARD);
         onEventMainThread(cardOperationEvent);
+        deleteCard(card);
     }
 
     @Override
@@ -172,8 +174,16 @@ public
         cardDataDialog.show(getSupportFragmentManager(), "");
     }
 
+    private void addCard(Card card) {
+        mSiValeDataHandler.createCard(this, card);
+    }
+
     private void updateCard(Card card) {
         mSiValeAPIHandler.updateCard(this, card);
+    }
+
+    private void deleteCard(Card card) {
+        mSiValeDataHandler.deleteCard(this, card);
     }
 
     private void showCardTransactions(Card card) {

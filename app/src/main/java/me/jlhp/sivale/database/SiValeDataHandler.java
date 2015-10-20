@@ -48,12 +48,28 @@ public class SiValeDataHandler {
         return card;
     }
 
-    private void updateCard(Context context, Card card) {
+    public void createCard(Context context, Card card) {
+        init(context, false);
+
+        if(card == null) return;
+
+        mCardRepository.create(card);
+    }
+
+    public void updateCard(Context context, Card card) {
         init(context, false);
 
         if(card == null) return;
 
         mCardRepository.update(card);
+    }
+
+    public void deleteCard(Context context, Card card) {
+        init(context, false);
+
+        if(card == null) return;
+
+        mCardRepository.delete(card);
     }
 
     public Card getCard(Context context, int cardId) {

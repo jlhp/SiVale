@@ -75,7 +75,7 @@ public class SiValeAPIHandler {
                 else {
                     Card card = mSiValeData.updateCardProperty(context,
                             callerId,
-                            Card.SiValeCardProperty.ID,
+                            Card.SiValeCardProperty.SESSION_ID,
                             sessionData.getSessionId());
 
                     if (nextOperations == null || nextOperations.length == 0) {
