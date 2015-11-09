@@ -14,6 +14,12 @@ public class SoapData implements SiValeData {
     }
 
     @Override
+    public boolean isInvalidLogin() {
+        return "PASSWORD INCORRECTO".equalsIgnoreCase(getError())
+            || "DATOS DESCONOCIDOS DE TARJETA".equalsIgnoreCase(getError()) ;
+    }
+
+    @Override
     public boolean isSessionExpired() {
         return "NO EXISTE SESION".equalsIgnoreCase(getError());
     }

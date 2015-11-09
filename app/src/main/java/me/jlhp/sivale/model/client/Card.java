@@ -46,7 +46,7 @@ public class Card implements Parcelable {
 
     private String mPassword;
 
-    private int mSessionId;
+    private Integer mSessionId;
 
     public int getId() {
         return mId;
@@ -106,7 +106,7 @@ public class Card implements Parcelable {
 
     public String getPassword() {
         mPassword = mPassword == null && Hawk.contains(getPasswordKey()) ?
-                    Hawk.<String>get(getPasswordKey()) : mPassword;
+                  Hawk.<String>get(getPasswordKey()) : mPassword;
         return mPassword;
     }
 
@@ -115,15 +115,31 @@ public class Card implements Parcelable {
         mPassword = password;
     }
 
-    public int getSessionId() {
+    public boolean unsetPassword() {
+        return Hawk.remove(getPasswordKey());
+    }
+
+    public Integer getSessionId() {
         mSessionId = mSessionId == 0 && Hawk.contains(getSessionKey()) ?
-                     (int) Hawk.get(getSessionKey()) : mSessionId;
+                     Hawk.<Integer>get(getSessionKey()) : mSessionId;
         return mSessionId;
     }
 
-    public void setSessionId(int sessionId) {
+    public void setSessionId(Integer sessionId) {
         Hawk.put(getSessionKey(), sessionId);
         mSessionId = sessionId;
+    }
+
+    public void unsetSessionId() {
+        Hawk.remove(getSessionKey());
+    }
+
+    public boolean hasValidSessionId() {
+        return mSessionId != null && mSessionId > 0;
+    }
+
+    public boolean hasValidPassword() {
+        return mPassword != null && !Util.isStringEmptyNullOrStringNull(mPassword);
     }
 
     private String getPasswordKey() {
@@ -134,6 +150,10 @@ public class Card implements Parcelable {
     private String getSessionKey() {
         if(Util.isStringEmptyOrNull(this.mNumber)) throw new IllegalStateException("'mNumber' must be set first");
         return this.mNumber + "_session";
+    }
+
+    public boolean hasValidData() {
+        return hasValidSessionId() && hasValidPassword();
     }
 
     public void update(Card card) {
@@ -220,6 +240,15 @@ public class Card implements Parcelable {
             return new Card[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "mAlias='" + mAlias + '\'' +
+                ", mLastUpdateDate=" + mLastUpdateDate +
+                ", mSessionId=" + mSessionId +
+                '}';
+    }
 
     @Override
     public boolean equals(Object o) {

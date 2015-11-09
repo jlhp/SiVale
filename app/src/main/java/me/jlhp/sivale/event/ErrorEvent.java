@@ -10,21 +10,35 @@ public class ErrorEvent implements CallerIdRequired, CurrentOperation, NextOpera
     private SiValeOperation CurrentOperation;
     private SiValeOperation[] NextOperations;
     private int CallerId;
+    private boolean ShowToUser;
 
     public ErrorEvent(String error, int callerId) {
         this(error, callerId, null);
     }
 
-    public ErrorEvent(String error, int callerId, SiValeOperation currentOperation) {
+    public ErrorEvent(String error,
+                      int callerId,
+                      SiValeOperation currentOperation) {
         this(error, callerId, currentOperation, (SiValeOperation) null);
     }
 
-    public ErrorEvent(String error, int callerId,
-                      SiValeOperation currentOperation, SiValeOperation... nextOperations) {
+    public ErrorEvent(String error,
+                      int callerId,
+                      SiValeOperation currentOperation,
+                      SiValeOperation... nextOperations) {
+        this(error, callerId, false, currentOperation, nextOperations);
+    }
+
+    public ErrorEvent(String error,
+                      int callerId,
+                      boolean showToUser,
+                      SiValeOperation currentOperation,
+                      SiValeOperation... nextOperations) {
         Error = error;
         CallerId = callerId;
         CurrentOperation = currentOperation;
         NextOperations = nextOperations;
+        ShowToUser = showToUser;
     }
 
     public String getError() {
@@ -33,6 +47,14 @@ public class ErrorEvent implements CallerIdRequired, CurrentOperation, NextOpera
 
     public void setError(String error) {
         Error = error;
+    }
+
+    public boolean showToUser() {
+        return ShowToUser;
+    }
+
+    public void setShowToUser(boolean showToUser) {
+        ShowToUser = showToUser;
     }
 
     @Override

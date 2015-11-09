@@ -1,8 +1,11 @@
 package me.jlhp.sivale.utility;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.crashlytics.android.Crashlytics;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -98,5 +101,23 @@ public class Util {
         t[0] = item;
 
         return addItemsToArray(t, items);
+    }
+
+    public static <T> T[] removeFirstItemFromArray(T[] array) {
+        if(array == null) return array;
+
+        array = array.length > 1 ?
+                Arrays.copyOfRange(array, 1, array.length) :
+                null;
+
+        return array;
+    }
+
+    public static void logError(String tag, String error) {
+        Crashlytics.log(Log.ERROR, tag, error);
+    }
+
+    public static void logInfo(String tag, String info) {
+        Crashlytics.log(Log.INFO, tag, info);
     }
 }

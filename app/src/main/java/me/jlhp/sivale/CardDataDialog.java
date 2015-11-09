@@ -109,6 +109,7 @@ public class CardDataDialog extends DialogFragment implements View.OnClickListen
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder
+                .setIcon(R.mipmap.ic_edit_white_big )
                 .setTitle("Ingrese los datos de la tarjeta")
                 .setView(vCardLayout)
                 .setPositiveButton(mCardOperation == CardOperation.UPDATE_DATA ? "Editar" : "Crear", null)

@@ -19,20 +19,20 @@ public class SiValeClient {
     public static final int CONNECTION_TIMEOUT = 5 * 1000;
     private static final String BASE_URL = "http://148.223.134.18:8888/bancamovil/WebMethods";
 
-    private static AsyncHttpClient client = new AsyncHttpClient();
-    private static SyncHttpClient syncClient = new SyncHttpClient();
+    private static AsyncHttpClient mAsyncClient = new AsyncHttpClient();
+    private static SyncHttpClient mSyncClient = new SyncHttpClient();
 
     public SiValeClient() {
-        client.setTimeout(CONNECTION_TIMEOUT);
+        mAsyncClient.setTimeout(CONNECTION_TIMEOUT);
     }
 
     public static void post(Context context, BaseEnvelope envelope, ResponseHandlerInterface responseHandler, boolean mSyncMode) {
         if(mSyncMode) {
             responseHandler.setUseSynchronousMode(true);
-            syncClient.post(context, getAbsoluteUrl(), soapEnvelope2StringEntity(envelope), "text/xml", responseHandler);
+            mSyncClient.post(context, getAbsoluteUrl(), soapEnvelope2StringEntity(envelope), "text/xml", responseHandler);
         }
         else{
-            client.post(context, getAbsoluteUrl(), soapEnvelope2StringEntity(envelope), "text/xml", responseHandler);
+            mAsyncClient.post(context, getAbsoluteUrl(), soapEnvelope2StringEntity(envelope), "text/xml", responseHandler);
         }
     }
 

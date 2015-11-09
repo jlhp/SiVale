@@ -33,6 +33,6 @@ public class SiValeParser {
     }
 
     private <T> IceSoapParser<T> getSoapParser(Class<T> clazz) {
-        return new IceSoapParserImpl<T>(clazz);
+        return new IceSoapParserImpl<>(clazz);
     }
 }

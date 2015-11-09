@@ -155,4 +155,28 @@ public class SessionData implements SiValeData {
     public boolean isSessionExpired() {
         return "NO EXISTE SESION".equalsIgnoreCase(getError());
     }
+
+    @Override
+    public boolean isInvalidLogin() {
+        return "PASSWORD INCORRECTO".equalsIgnoreCase(getError())
+            || "DATOS DESCONOCIDOS DE TARJETA".equalsIgnoreCase(getError()) ;
+    }
+
+    @Override
+    public String toString() {
+        return "SessionData{" +
+                "CardType='" + CardType + '\'' +
+                ", ErrorDescription='" + ErrorDescription + '\'' +
+                ", CardholderName='" + CardholderName + '\'' +
+                ", CardNumber='" + CardNumber + '\'' +
+                ", SessionStatus=" + SessionStatus +
+                ", CVEError=" + CVEError +
+                ", CustomerNumber='" + CustomerNumber + '\'' +
+                ", SecondsAvailable=" + SecondsAvailable +
+                ", SessionId=" + SessionId +
+                ", SecurityLevel='" + SecurityLevel + '\'' +
+                ", AccountNumber='" + AccountNumber + '\'' +
+                ", CVEEmisor='" + CVEEmisor + '\'' +
+                '}';
+    }
 }

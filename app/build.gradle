@@ -12,6 +12,7 @@ apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://jitpack.io" }
 }
 
 
@@ -42,6 +43,7 @@ dependencies {
     compile 'com.melnykov:floatingactionbutton:1.2.0'
     compile 'com.loopj.android:android-async-http:1.4.6'
     compile 'de.greenrobot:eventbus:2.4.0'
+    //compile 'com.github.orhanobut:hawk:1.19'
     compile 'com.orhanobut:hawk:1.4-SNAPSHOT'
     compile 'com.balysv:material-ripple:1.0.1'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {

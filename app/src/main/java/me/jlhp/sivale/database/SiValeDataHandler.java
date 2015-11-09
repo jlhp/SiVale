@@ -69,6 +69,9 @@ public class SiValeDataHandler {
 
         if(card == null) return;
 
+        card.unsetPassword();
+        card.unsetSessionId();
+
         mCardRepository.delete(card);
     }
 

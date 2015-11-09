@@ -25,4 +25,10 @@ public class FaultData extends SOAP11Fault implements SiValeData {
     public String getError() {
         return getFaultString();
     }
+
+    @Override
+    public boolean isInvalidLogin() {
+        return "PASSWORD INCORRECTO".equalsIgnoreCase(getError())
+                || "DATOS DESCONOCIDOS DE TARJETA".equalsIgnoreCase(getError()) ;
+    }
 }

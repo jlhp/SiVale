@@ -1,35 +1,20 @@
 package me.jlhp.sivale.api;
 
 import android.content.Context;
-import android.system.ErrnoException;
 
-import com.alexgilleran.icesoap.soapfault.SOAP11Fault;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
-import org.apache.http.Header;
-import org.apache.http.client.HttpResponseException;
-import org.apache.http.conn.ConnectTimeoutException;
-
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.util.Arrays;
 
 import de.greenrobot.event.EventBus;
-import me.jlhp.sivale.R;
 import me.jlhp.sivale.database.SiValeDataHandler;
 import me.jlhp.sivale.event.CardOperation;
 import me.jlhp.sivale.event.CardOperationEvent;
 import me.jlhp.sivale.event.ErrorEvent;
-import me.jlhp.sivale.event.FaultEvent;
-import me.jlhp.sivale.event.GetBalanceEvent;
-import me.jlhp.sivale.event.GetTransactionsEvent;
-import me.jlhp.sivale.event.LoginEvent;
 import me.jlhp.sivale.model.client.Card;
 import me.jlhp.sivale.model.server.BalanceData;
-import me.jlhp.sivale.model.server.FaultData;
 import me.jlhp.sivale.model.server.SessionData;
 import me.jlhp.sivale.model.server.SiValeData;
 import me.jlhp.sivale.model.server.TransactionData;
+import me.jlhp.sivale.utility.Logger;
 import me.jlhp.sivale.utility.Util;
 
 /**
@@ -37,11 +22,9 @@ import me.jlhp.sivale.utility.Util;
  */
 
 /*
-TODO This class does too much stuff... At least subclass AsyncHttpResponseHandler.
-TODO Also, maybe I should be calling the API, and the API the handler, and not backwards... I don't know.
+TODO Maybe I should be calling the API, and the API the handler, and not backwards... I don't know.
 */
 public class SiValeAPIHandler {
-    private final SiValeParser SoapParser = new SiValeParser();
     private final SiValeAPI API = new SiValeAPI();
     private boolean mRequestInProgress = false;
     private SiValeDataHandler mSiValeData = new SiValeDataHandler();
@@ -54,151 +37,45 @@ public class SiValeAPIHandler {
         API.setSyncMode(syncMode);
     }
 
-    public void login(final Context context, final String cardNumber, String password,
-                      final int callerId, final SiValeOperation... nextOperations) {
-        API.login(context, cardNumber, password, new AsyncHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                setRequestInProgress(true);
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                setRequestInProgress(false);
-                SessionData sessionData = getSoapResponse(SessionData.class, responseBody);
-
-                if (isError(sessionData))
-                    postEvent(new ErrorEvent(sessionData.getError(),
-                            callerId,
-                            SiValeOperation.LOGIN,
-                            nextOperations));
-                else {
-                    Card card = mSiValeData.updateCardProperty(context,
-                            callerId,
-                            Card.SiValeCardProperty.SESSION_ID,
-                            sessionData.getSessionId());
-
-                    if (nextOperations == null || nextOperations.length == 0) {
-                        postEvent(new CardOperationEvent(card,
-                                CardOperation.UPDATE_DATA,
-                                nextOperations));
-                    } else {
-                        executeOperation(context, card, nextOperations);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers,
-                                  byte[] responseBody, Throwable error) {
-                setRequestInProgress(false);
-                FaultData faultData = getSoapFault(responseBody, error);
-
-                postEvent(new ErrorEvent(faultData.getError(), callerId, SiValeOperation.GET_TRANSACTIONS, nextOperations));
-            }
-        });
+    public void login(Context context,
+                      String cardNumber,
+                      String password,
+                      int callerId,
+                      SiValeOperation... nextOperations) {
+        API.login(context,
+                cardNumber,
+                password,
+                new SiValeResponseHandlerImpl<>(SessionData.class,
+                        context,
+                        callerId,
+                        SiValeOperation.LOGIN,
+                        nextOperations));
     }
 
-    public void getBalance(final Context context, int sessionId,
-                           final int callerId, final SiValeOperation... nextOperations) {
-        API.getBalance(context, sessionId, new AsyncHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                setRequestInProgress(true);
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                setRequestInProgress(false);
-                BalanceData balanceData = getSoapResponse(BalanceData.class, responseBody);
-
-                if (isSessionExpired(balanceData)) {
-                    loginAndRetry(context, callerId, nextOperations);
-                } else if (isError(balanceData))
-                    postEvent(new ErrorEvent(balanceData.getError(),
-                            callerId,
-                            SiValeOperation.GET_BALANCE,
-                            nextOperations));
-                else {
-                    Card card = mSiValeData.updateCardProperty(context,
-                            callerId,
-                            Card.SiValeCardProperty.BALANCE,
-                            balanceData.getBalance());
-
-                    if (nextOperations == null || nextOperations.length == 0) {
-                        postEvent(new CardOperationEvent(card,
-                                CardOperation.UPDATE_DATA,
-                                nextOperations));
-                    } else {
-                        executeOperation(context, card, nextOperations);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers,
-                                  byte[] responseBody, Throwable error) {
-                setRequestInProgress(false);
-                FaultData faultData = getSoapFault(responseBody, error);
-
-                if (isSessionExpired(faultData)) {
-                    loginAndRetry(context, callerId, nextOperations);
-                } else {
-                    postEvent(new ErrorEvent(faultData.getError(), callerId, SiValeOperation.GET_TRANSACTIONS, nextOperations));
-                }
-            }
-        });
+    public void getBalance(Context context,
+                           int sessionId,
+                           int callerId,
+                           SiValeOperation... nextOperations) {
+        API.getBalance(context,
+                sessionId,
+                new SiValeResponseHandlerImpl<>(BalanceData.class,
+                        context,
+                        callerId,
+                        SiValeOperation.GET_BALANCE,
+                        nextOperations));
     }
 
-    public void getTransactions(final Context context, int sessionId,
-                                final int callerId, final SiValeOperation... nextOperations) {
-        API.getTransactions(context, sessionId, new AsyncHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                setRequestInProgress(true);
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                setRequestInProgress(false);
-                TransactionData transactionData = getSoapResponse(TransactionData.class,
-                        responseBody);
-                if (isSessionExpired(transactionData)) {
-                    loginAndRetry(context, callerId, nextOperations);
-                } else if (isError(transactionData))
-                    postEvent(new ErrorEvent(transactionData.getError(),
-                            callerId,
-                            SiValeOperation.GET_TRANSACTIONS,
-                            nextOperations));
-                else {
-                    Card card = mSiValeData.updateCardProperty(context,
-                            callerId,
-                            Card.SiValeCardProperty.TRANSACTIONS,
-                            transactionData.getTransactions());
-
-                    if (nextOperations == null || nextOperations.length == 0) {
-                        postEvent(new CardOperationEvent(card,
-                                CardOperation.UPDATE_DATA,
-                                nextOperations));
-                    } else {
-                        executeOperation(context, card, nextOperations);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers,
-                                  byte[] responseBody, Throwable error) {
-                setRequestInProgress(false);
-                FaultData faultData = getSoapFault(responseBody, error);
-
-                if (isSessionExpired(faultData)) {
-                    loginAndRetry(context, callerId, nextOperations);
-                } else {
-                    postEvent(new ErrorEvent(faultData.getError(), callerId, SiValeOperation.GET_TRANSACTIONS, nextOperations));
-                }
-            }
-        });
+    public void getTransactions(Context context,
+                                int sessionId,
+                                int callerId,
+                                SiValeOperation... nextOperations) {
+        API.getTransactions(context,
+                sessionId,
+                new SiValeResponseHandlerImpl<>(BalanceData.class,
+                        context,
+                        callerId,
+                        SiValeOperation.GET_TRANSACTIONS,
+                        nextOperations));
     }
 
     public void updateCard(Context context, Card card) {
@@ -207,26 +84,49 @@ public class SiValeAPIHandler {
         executeOperation(context, card, SiValeOperation.GET_BALANCE, SiValeOperation.GET_TRANSACTIONS);
     }
 
-    public void executeOperation(Context context,
-                                 Card card,
-                                 SiValeOperation... operations) {
+    private void executeOperation(Context context,
+                                  Card card,
+                                  SiValeOperation... operations) {
+        if(card == null || operations == null || operations.length == 0) {
+            return;
+        }
+
+        Logger.getInstance().logInfo(card.toString());
+        Logger.getInstance().logInfo(Arrays.toString(operations));
 
         if(isRequestInProgress()) {
-            Util.showToast(context, "Favor de esperar un momento");
+            postErrorEvent("Favor de esperar un momento",
+                           card.getId(),
+                           true,
+                           operations[0],
+                           Util.removeFirstItemFromArray(operations));
             return;
         }
-        else if(card == null || operations == null || operations.length == 0) {
+        else if(!card.hasValidPassword()) {
+            postErrorEvent("Favor de ingresar una contraseña para la tarjeta: " + card.getAlias(),
+                    card.getId(),
+                    true,
+                    operations[0],
+                    Util.removeFirstItemFromArray(operations));
             return;
         }
-        else if(card.getSessionId() <= 0 && operations[0] != SiValeOperation.LOGIN) {
-            login(context, card.getNumber(), card.getPassword(), card.getId(), operations);
+        else if(!card.hasValidSessionId()) {
+            if(operations[0] != SiValeOperation.LOGIN) {
+                login(context, card.getNumber(), card.getPassword(), card.getId(), Util.addItemsToArray(SiValeOperation.LOGIN, operations));
+            }
+            else {
+                postErrorEvent("Error con SiVale. Por favor intenta más tarde.",
+                        card.getId(),
+                        true,
+                        operations[0],
+                        Util.removeFirstItemFromArray(operations));
+            }
+
             return;
         }
 
         SiValeOperation executeOperation = operations[0];
-        operations = operations.length > 1 ?
-                Arrays.copyOfRange(operations, 1, operations.length) :
-                null;
+        operations = Util.removeFirstItemFromArray(operations);
 
         switch (executeOperation) {
             case LOGIN:
@@ -241,79 +141,136 @@ public class SiValeAPIHandler {
         }
     }
 
-    public void loginAndRetry(Context context, int callerId, SiValeOperation... operations) {
+    private void loginAndRetry(Context context, int callerId, SiValeOperation currentOperation, SiValeOperation... nextOperations) {
+        nextOperations = Util.addItemsToArray(currentOperation, nextOperations);
+
         executeOperation(context,
-                         mSiValeData.getCard(context, callerId),
-                         Util.addItemsToArray(SiValeOperation.LOGIN, operations));
+                mSiValeData.getCard(context, callerId),
+                Util.addItemsToArray(SiValeOperation.LOGIN, nextOperations));
     }
 
     public boolean isRequestInProgress() {
         return mRequestInProgress;
     }
 
+    private void setRequestInProgress(boolean requestInProgress) {
+        mRequestInProgress = requestInProgress;
+    }
+
     private void postEvent(Object event) {
         EventBus.getDefault().postSticky(event);
     }
 
-    private <T> T getSoapResponse(Class<T> clazz, byte[] soapData) {
-        return SoapParser.parseSoapData(clazz, soapData);
+    private void postErrorEvent(String error,
+                                  int callerId,
+                                  boolean showToUser,
+                                  SiValeOperation currentOperation,
+                                  SiValeOperation... nextOperations) {
+        EventBus.getDefault().postSticky(new ErrorEvent(error,
+                callerId,
+                showToUser,
+                currentOperation,
+                nextOperations));
     }
 
-    private FaultData getSoapFault(byte[] responseBody, Throwable error) {
-        if(error == null) {
-            return SoapParser.parseSoapData(FaultData.class, responseBody);
-        }
-        else if(error instanceof HttpResponseException) {
-            SOAP11Fault fault = SoapParser.parseSoapData(SOAP11Fault.class, responseBody);
-            String faultString = Util.isStringEmptyOrNull(error.getMessage()) ?
-                    "Error con SiVale":
-                    error.getMessage();
+    private class SiValeResponseHandlerImpl<ResponseType extends SiValeData> extends SiValeResponseHandler<ResponseType> {
 
-            if(fault != null &&
-               fault.getFaultString() != null &&
-               fault.getFaultString().contains("NullPointerException")) {
-                //It seems that when a SiVale session is very old and you try to use it
-                //the server will throw a NullPointerException. This check will allow me
-                //to retry the operation(s) by doing a login first.
-                return new FaultData(null, "NO EXISTE SESION", null);
+        private Context mContext;
+        private int mCallerId;
+        private SiValeOperation mCurrentOperation;
+        private SiValeOperation[] mNextOperations;
+
+        public SiValeResponseHandlerImpl(Class<ResponseType> responseClass,
+                                         Context context,
+                                         int callerId,
+                                         SiValeOperation currentOperation,
+                                         SiValeOperation... nextOperations) {
+            super(responseClass);
+
+            this.mContext = context;
+            this.mCallerId = callerId;
+            this.mCurrentOperation = currentOperation;
+            this.mNextOperations = nextOperations;
+        }
+
+        @Override
+        public void onStart() {
+            setRequestInProgress(true);
+        }
+
+        @Override
+        public void onSuccess(ResponseType response) {
+            setRequestInProgress(false);
+
+            Card card;
+
+            if(response instanceof SessionData) {
+                SessionData sessionData = (SessionData) response;
+
+                card = mSiValeData.updateCardProperty(mContext,
+                        mCallerId,
+                        Card.SiValeCardProperty.SESSION_ID,
+                        sessionData.getSessionId());
+            } else if(response instanceof BalanceData) {
+                BalanceData balanceData = (BalanceData) response;
+
+                card = mSiValeData.updateCardProperty(mContext,
+                        mCallerId,
+                        Card.SiValeCardProperty.BALANCE,
+                        balanceData.getBalance());
+            } else if(response instanceof TransactionData) {
+                TransactionData transactionData = (TransactionData) response;
+
+                card = mSiValeData.updateCardProperty(mContext,
+                        mCallerId,
+                        Card.SiValeCardProperty.TRANSACTIONS,
+                        transactionData.getTransactions());
+            } else {
+                throw new IllegalStateException("Response type is unknown");
             }
 
-            return new FaultData(null, faultString, null);
-        }
-        else if(error instanceof ConnectTimeoutException ||
-                error instanceof SocketTimeoutException ||
-                error.getCause() instanceof ConnectTimeoutException ||
-                error.getCause() instanceof SocketTimeoutException){
-            return new FaultData(null, "No se pudo establecer una conexi�n con SiVale", null);
-        }
-        else if(error instanceof SocketException || error.getCause() instanceof SocketException){
-            return new FaultData(null, "Error de conexi�n. Revise su conexi�n a internet.", null);
-        }
-        else {
-            String faultString = Util.isStringEmptyOrNull(error.getMessage()) ?
-                                    "Error con SiVale":
-                                    error.getMessage();
-            return new FaultData(null, faultString, null);
-        }
-    }
-
-    private boolean isError(SiValeData data) {
-        if (data == null) {
-            throw new IllegalArgumentException("'data' can't ne null");
+            if (mNextOperations == null || mNextOperations.length == 0) {
+                postEvent(new CardOperationEvent(card,
+                        CardOperation.UPDATE_DATA,
+                        mNextOperations));
+            } else {
+                executeOperation(mContext, card, mNextOperations);
+            }
         }
 
-        return data.isError();
-    }
+        @Override
+        public void onInvalidLogin() {
+            super.onInvalidLogin();
 
-    private boolean isSessionExpired(SiValeData data) {
-        if (data == null) {
-            throw new IllegalArgumentException("'data' can't ne null");
+            setRequestInProgress(false);
+
+            postErrorEvent("La contraseña o la tarjeta son incorrectos",
+                    mCallerId,
+                    true,
+                    mCurrentOperation,
+                    mNextOperations);
         }
 
-        return data.isSessionExpired();
-    }
+        @Override
+        public void onSessionExpired() {
+            super.onSessionExpired();
 
-    private void setRequestInProgress(boolean requestInProgress) {
-        mRequestInProgress = requestInProgress;
+            setRequestInProgress(false);
+
+            loginAndRetry(mContext, mCallerId, mCurrentOperation, mNextOperations);
+        }
+
+        @Override
+        public void onError(String response) {
+            super.onError(response);
+
+            setRequestInProgress(false);
+
+            postErrorEvent(response,
+                    mCallerId,
+                    false,
+                    mCurrentOperation,
+                    mNextOperations);
+        }
     }
 }

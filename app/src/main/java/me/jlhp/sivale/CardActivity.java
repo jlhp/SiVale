@@ -160,8 +160,10 @@ public
 
     public void onEventMainThread(@NonNull ErrorEvent errorEvent) {
         Util.unregisterStickyEvent(errorEvent);
+        Util.showToast(this,
+                       errorEvent.showToUser() ? errorEvent.getError() :
+                                                 getString(R.string.unknown_error));
 
-        Util.showToast(this, getString(R.string.unknown_error));
         vRecList.getAdapter().notifyDataSetChanged();
     }
 
