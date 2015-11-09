@@ -10,6 +10,7 @@ import me.jlhp.sivale.event.CardOperation;
 import me.jlhp.sivale.event.CardOperationEvent;
 import me.jlhp.sivale.event.ErrorEvent;
 import me.jlhp.sivale.model.client.Card;
+import me.jlhp.sivale.model.client.Transaction;
 import me.jlhp.sivale.model.server.BalanceData;
 import me.jlhp.sivale.model.server.SessionData;
 import me.jlhp.sivale.model.server.SiValeData;
@@ -71,7 +72,7 @@ public class SiValeAPIHandler {
                                 SiValeOperation... nextOperations) {
         API.getTransactions(context,
                 sessionId,
-                new SiValeResponseHandlerImpl<>(BalanceData.class,
+                new SiValeResponseHandlerImpl<>(TransactionData.class,
                         context,
                         callerId,
                         SiValeOperation.GET_TRANSACTIONS,

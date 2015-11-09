@@ -120,7 +120,7 @@ public class Card implements Parcelable {
     }
 
     public Integer getSessionId() {
-        mSessionId = mSessionId == 0 && Hawk.contains(getSessionKey()) ?
+        mSessionId = (mSessionId == null || mSessionId == 0) && Hawk.contains(getSessionKey()) ?
                      Hawk.<Integer>get(getSessionKey()) : mSessionId;
         return mSessionId;
     }
@@ -135,10 +135,12 @@ public class Card implements Parcelable {
     }
 
     public boolean hasValidSessionId() {
+        getSessionId();
         return mSessionId != null && mSessionId > 0;
     }
 
     public boolean hasValidPassword() {
+        getPassword();
         return mPassword != null && !Util.isStringEmptyNullOrStringNull(mPassword);
     }
 
