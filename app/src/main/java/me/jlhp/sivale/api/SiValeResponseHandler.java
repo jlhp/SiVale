@@ -9,6 +9,8 @@ import org.apache.http.conn.ConnectTimeoutException;
 
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.Arrays;
+import java.util.Iterator;
 
 import me.jlhp.sivale.model.server.FaultData;
 import me.jlhp.sivale.model.server.SiValeData;
@@ -36,7 +38,11 @@ public
         ResponseType response = getSoapResponse(mResponseClass, responseBody);
 
         if(response == null) {
-            Logger.getInstance().logError("Response is null");
+            Logger.getInstance().logError("null_response{" +
+                    "statusCode='" + statusCode + '\'' +
+                    ", headers=" + Arrays.deepToString(headers) +
+                    ", responseBody=" + Arrays.toString(responseBody) +
+                    '}');
             return;
         }
 
@@ -81,7 +87,7 @@ public
         return mSoapParser.parseSoapData(clazz, soapData);
     }
 
-    private boolean isError(SiValeData data) {
+    private boolean isError(ResponseType data) {
         if (data == null) {
             throw new IllegalArgumentException("'data' can't ne null");
         }

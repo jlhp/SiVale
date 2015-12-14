@@ -24,12 +24,10 @@ public class SiValeApplication extends Application {
             e.printStackTrace();
         }
 
-        //Hawk.init(this, getString(R.string.hawk));
-
          Hawk.init(this)
                 .setEncryptionMethod(HawkBuilder.EncryptionMethod.HIGHEST)
                 .setPassword(getString(R.string.hawk))
-                .setStorage(new TestStorage(this, "HAWK"))
+                .setStorage(HawkBuilder.newSharedPrefStorage(this))
                 .setLogLevel(LogLevel.FULL)
                 .build();
     }

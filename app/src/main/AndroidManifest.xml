@@ -39,10 +39,6 @@
             android:value="b5111c8611c598f50b484fb7c446a678ec37665c" />
 
         <activity
-            android:name=".CardDetailsActivity"
-            android:label="@string/title_activity_card_details" >
-        </activity>
-        <activity
             android:name=".TransactionActivity"
             android:label="@string/title_activity_transaction" >
         </activity>
