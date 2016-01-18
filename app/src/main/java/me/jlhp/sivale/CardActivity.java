@@ -5,11 +5,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.melnykov.fab.FloatingActionButton;
@@ -23,6 +27,7 @@ import me.jlhp.sivale.event.CardClickEvent;
 import me.jlhp.sivale.event.CardOperation;
 import me.jlhp.sivale.event.CardOperationEvent;
 import me.jlhp.sivale.event.ErrorEvent;
+import me.jlhp.sivale.event.SyncFrequencyChangeEvent;
 import me.jlhp.sivale.model.client.Card;
 import me.jlhp.sivale.updater.SiValeAlarm;
 import me.jlhp.sivale.utility.Util;
@@ -60,6 +65,30 @@ public
         if(savedInstanceState == null) {
             scheduleAutoUpdater();
             setAdapters(true);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu myMenu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_main, myMenu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
         }
     }
 
@@ -235,13 +264,10 @@ public
     }
 
     private void scheduleAutoUpdater(){
-            Intent intent = new Intent(getApplicationContext(), SiValeAlarm.class);
-            final PendingIntent pIntent = PendingIntent.getBroadcast(this, SiValeAlarm.REQUEST_CODE,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            long firstMillis = System.currentTimeMillis();
+        int syncFrequency = PreferenceManager
+                            .getDefaultSharedPreferences(this)
+                            .getInt(getString(R.string.pref_key_sync_frequency), 1);
 
-            AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-            alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
-                    3600*1000, pIntent);
+        Util.setSiValeSynchronizationAlarm(this, syncFrequency);
     }
 }

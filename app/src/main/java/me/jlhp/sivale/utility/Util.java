@@ -1,6 +1,9 @@
 package me.jlhp.sivale.utility;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,6 +17,7 @@ import java.util.Collection;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import me.jlhp.sivale.updater.SiValeAlarm;
 
 /**
  * Created by JOSELUIS on 3/8/2015.
@@ -21,6 +25,23 @@ import de.greenrobot.event.EventBus;
 public class Util {
 
     private Util() { }
+
+    public static void setSiValeSynchronizationAlarm(Context context, int syncFrequency){
+        Intent intent = new Intent(context.getApplicationContext(), SiValeAlarm.class);
+        final PendingIntent pIntent = PendingIntent.getBroadcast(context, SiValeAlarm.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        if(syncFrequency == 0) {
+            AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            alarm.cancel(pIntent);
+        }
+        else {
+            long firstMillis = System.currentTimeMillis();
+            AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
+                    3600*syncFrequency*1000, pIntent);
+        }
+    }
 
     public static boolean isStringEmptyOrNull(String s) {
         return s == null || s.trim().length() == 0;

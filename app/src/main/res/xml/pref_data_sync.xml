@@ -1,0 +1,18 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
+
+    <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
+         dismiss it. -->
+    <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+
+    <me.jlhp.sivale.NumberPickerPreference
+        android:key="sync_frequency"
+        android:defaultValue="1"
+        custom:min="0"
+        android:max="24"
+        android:title="@string/pref_title_sync_frequency"
+        android:negativeButtonText="Cancelar"
+        android:positiveButtonText="Cambiar"
+        android:dialogIcon="@mipmap/ic_sync_white_smallest"
+        android:dialogTitle="@string/pref_dialog_title_sync_frequency"/>
+</PreferenceScreen>

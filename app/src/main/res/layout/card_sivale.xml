@@ -81,14 +81,6 @@
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/separator" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:src="@mipmap/ic_calendar"
-            android:layout_below="@+id/separator"
-            android:layout_toLeftOf="@id/card_last_update_date"
-            android:tint="@color/background_test_light_color" />
-
         <TextView
             android:id="@+id/card_number"
             android:layout_width="230dp"
@@ -100,14 +92,6 @@
             android:text="**** - **** - **** - 5214"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/card_last_update_date" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:src="@mipmap/ic_card"
-            android:layout_below="@+id/card_last_update_date"
-            android:layout_toLeftOf="@id/card_number"
-            android:tint="@color/background_test_light_color" />
 
         <LinearLayout
             android:layout_width="match_parent"

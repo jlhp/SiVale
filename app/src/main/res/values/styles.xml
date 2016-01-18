@@ -16,4 +16,18 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
     </style>
+
+    <style name="MyListViewStyle" parent="@android:style/Widget.Holo.Light.ListView">
+        <item name="android:background">@color/statusbar_background</item>
+    </style>
+
+    <!-- note: to re-use an existing Android attribute not already used by the superclass, name should have prefix "android:" and do not define a format -->
+    <declare-styleable name="NumberPickerDialogPreference">
+        <attr name="android:max" />
+        <attr name="min" format="integer" />
+        <attr name="android:negativeButtonText" />
+        <attr name="android:positiveButtonText" />
+        <attr name="android:dialogIcon" />
+        <attr name="android:dialogTitle"/>
+    </declare-styleable>
 </resources>

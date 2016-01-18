@@ -27,8 +27,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#fff"
-            android:hint="**** - **** - **** - 5487"
+            android:hint="****-****-****-5487"
             android:inputType="number"
+            android:imeOptions="flagNoExtractUi"
+            android:maxLength="19"
+            android:digits="01234-56789"
             />
 
         <TextView
@@ -47,7 +50,8 @@
             android:inputType="textPassword"
             android:fontFamily="sans-serif"
             android:textColor="#fff"
-            android:hint="******"/>
+            android:hint="******"
+            android:imeOptions="flagNoExtractUi"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -63,7 +67,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#fff"
-            android:hint="SiVale: Compras" />
+            android:hint="SiVale: Compras"
+            android:imeOptions="flagNoExtractUi"/>
 
     </LinearLayout>
 </ScrollView>
