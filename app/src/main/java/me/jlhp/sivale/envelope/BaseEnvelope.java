@@ -8,7 +8,7 @@ import com.alexgilleran.icesoap.xml.impl.XMLTextNodeImpl;
 /**
  * Created by jjherrer on 26/02/2015.
  */
-public class BaseEnvelope extends BaseSOAP11Envelope {
+public class BaseEnvelope extends BaseSOAP11Envelope implements BaseEnv {
 
     private final static String NAMESPACE = "WebMethods";
 

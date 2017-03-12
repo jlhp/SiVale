@@ -11,9 +11,15 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 
 import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
+import java.util.IllegalFormatConversionException;
+import java.util.IllegalFormatException;
+import java.util.Locale;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -39,7 +45,7 @@ public class Util {
             long firstMillis = System.currentTimeMillis();
             AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
-                    3600*syncFrequency*1000, pIntent);
+                    syncFrequency*1000, pIntent);
         }
     }
 
@@ -132,6 +138,27 @@ public class Util {
                 null;
 
         return array;
+    }
+
+    public static Date parseStringDate(String date, String... formats) {
+        if(date == null) return null;
+
+        Date d;
+
+        for(String f : formats) {
+            SimpleDateFormat sdf = new SimpleDateFormat(f, Locale.US);
+
+            try {
+                d = sdf.parse(date.trim());
+            } catch (ParseException e) {
+                logInfo("Parsing error", "Date " + date + " wasn't parsed by format" + f);
+                continue;
+            }
+
+            return d;
+        }
+
+        throw new IllegalStateException("Unable to parse date " + date + " using formats " + formats);
     }
 
     public static void logError(String tag, String error) {

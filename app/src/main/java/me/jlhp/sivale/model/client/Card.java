@@ -39,6 +39,18 @@ public class Card implements Parcelable {
     @DatabaseField
     private Date mLastUpdateDate;
 
+    @DatabaseField
+    private BigDecimal mPreviousBalance;
+
+    @DatabaseField
+    private Date mPreviousBalanceUpdateDate;
+
+    @DatabaseField
+    private boolean mBalanceCorrectlyUpdated;
+
+    @DatabaseField
+    private boolean mTransactionsCorrectlyUpdated;
+
     @ForeignCollectionField(eager = false)
     private Collection<Transaction> mTransactions;
 
@@ -116,7 +128,7 @@ public class Card implements Parcelable {
     }
 
     public boolean unsetPassword() {
-        return Hawk.remove(getPasswordKey());
+        return Hawk.delete(getPasswordKey());
     }
 
     public Integer getSessionId() {
@@ -131,7 +143,7 @@ public class Card implements Parcelable {
     }
 
     public void unsetSessionId() {
-        Hawk.remove(getSessionKey());
+        Hawk.delete(getSessionKey());
     }
 
     public boolean hasValidSessionId() {
@@ -156,6 +168,38 @@ public class Card implements Parcelable {
 
     public boolean hasValidData() {
         return hasValidSessionId() && hasValidPassword();
+    }
+
+    public BigDecimal getPreviousBalance() {
+        return mPreviousBalance;
+    }
+
+    public void setPreviousBalance(BigDecimal mPreviousBalance) {
+        this.mPreviousBalance = mPreviousBalance;
+    }
+
+    public Date getPreviousBalanceUpdateDate() {
+        return mPreviousBalanceUpdateDate;
+    }
+
+    public void setPreviousBalanceUpdateDate(Date mPreviousBalanceUpdateDate) {
+        this.mPreviousBalanceUpdateDate = mPreviousBalanceUpdateDate;
+    }
+
+    public boolean isBalanceCorrectlyUpdated() {
+        return mBalanceCorrectlyUpdated;
+    }
+
+    public void setBalanceCorrectlyUpdated(boolean mBalanceCorrectlyUpdated) {
+        this.mBalanceCorrectlyUpdated = mBalanceCorrectlyUpdated;
+    }
+
+    public boolean areTansactionsCorrectlyUpdated() {
+        return mTransactionsCorrectlyUpdated;
+    }
+
+    public void setTransactionsCorrectlyUpdated(boolean mTransactionsCorrectlyUpdated) {
+        this.mTransactionsCorrectlyUpdated = mTransactionsCorrectlyUpdated;
     }
 
     public void update(Card card) {

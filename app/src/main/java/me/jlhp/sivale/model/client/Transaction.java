@@ -107,24 +107,7 @@ public class Transaction implements Parcelable {
     }
 
     public void setTransactionDate(String transactionDate) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
-
-        try {
-            mTransactionDate = sdf.parse(transactionDate.trim());
-        } catch (ParseException e) {
-            if(e.getMessage().contains("Unparseable date")) {
-                SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd HHmmss", Locale.US);
-
-                try {
-                    mTransactionDate = sdf2.parse(transactionDate.trim());
-                } catch (ParseException e2) {
-                    e2.printStackTrace();
-                }
-            }
-            else {
-                e.printStackTrace();
-            }
-        }
+        mTransactionDate = Util.parseStringDate(transactionDate, "dd/MM/yyyy HH:mm:ss", "yyyyMMdd HHmmss");
     }
 
     public BigDecimal getAmount() {

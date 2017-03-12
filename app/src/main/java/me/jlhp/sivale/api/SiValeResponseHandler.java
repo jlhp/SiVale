@@ -3,15 +3,14 @@ package me.jlhp.sivale.api;
 import com.alexgilleran.icesoap.soapfault.SOAP11Fault;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import org.apache.http.Header;
-import org.apache.http.client.HttpResponseException;
-import org.apache.http.conn.ConnectTimeoutException;
-
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.client.HttpResponseException;
+import cz.msebera.android.httpclient.conn.ConnectTimeoutException;
 import me.jlhp.sivale.model.server.FaultData;
 import me.jlhp.sivale.model.server.SiValeData;
 import me.jlhp.sivale.utility.Logger;

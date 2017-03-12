@@ -5,7 +5,6 @@ import android.app.Application;
 import com.orhanobut.hawk.Hawk;
 import com.orhanobut.hawk.HawkBuilder;
 import com.crashlytics.android.Crashlytics;
-import com.orhanobut.hawk.LogLevel;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -24,11 +23,6 @@ public class SiValeApplication extends Application {
             e.printStackTrace();
         }
 
-         Hawk.init(this)
-                .setEncryptionMethod(HawkBuilder.EncryptionMethod.HIGHEST)
-                .setPassword(getString(R.string.hawk))
-                .setStorage(HawkBuilder.newSharedPrefStorage(this))
-                .setLogLevel(LogLevel.FULL)
-                .build();
+         Hawk.init(this).build();
     }
 }

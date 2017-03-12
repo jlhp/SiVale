@@ -11,6 +11,7 @@ import me.jlhp.sivale.event.CardOperationEvent;
 import me.jlhp.sivale.event.ErrorEvent;
 import me.jlhp.sivale.model.client.Card;
 import me.jlhp.sivale.model.client.Transaction;
+import me.jlhp.sivale.model.server.AllData;
 import me.jlhp.sivale.model.server.BalanceData;
 import me.jlhp.sivale.model.server.SessionData;
 import me.jlhp.sivale.model.server.SiValeData;
@@ -77,6 +78,18 @@ public class SiValeAPIHandler {
                         callerId,
                         SiValeOperation.GET_TRANSACTIONS,
                         nextOperations));
+    }
+
+    public void getTransactionsvV2(Context context,
+                                   String cardNumber,
+                                int callerId) {
+        API.getTransactionsV2(context,
+                cardNumber,
+                new SiValeResponseHandlerImpl<>(AllData.class,
+                        context,
+                        callerId,
+                        SiValeOperation.GET_TRANSACTIONS,
+                        null));
     }
 
     public void updateCard(Context context, Card card) {
@@ -226,6 +239,14 @@ public class SiValeAPIHandler {
                         mCallerId,
                         Card.SiValeCardProperty.TRANSACTIONS,
                         transactionData.getTransactions());
+            } else if(response instanceof AllData) {
+                AllData transactionData = (AllData) response;
+                System.out.print(transactionData);
+                card = null;
+                //card = mSiValeData.updateCardProperty(mContext,
+                //        mCallerId,
+                //        Card.SiValeCardProperty.TRANSACTIONS,
+                //        transactionData.getTransactions());
             } else {
                 throw new IllegalStateException("Response type is unknown");
             }

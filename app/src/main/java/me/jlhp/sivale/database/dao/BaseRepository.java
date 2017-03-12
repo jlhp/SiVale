@@ -29,7 +29,6 @@ public abstract class BaseRepository<T> {
             this.entityClass = entityClass;
 
             databaseHelper = new DatabaseHelper(ctx);
-            TableUtils.createTableIfNotExists(databaseHelper.getConnectionSource(), entityClass);
             dao = RuntimeExceptionDao.createDao(databaseHelper.getConnectionSource(), entityClass);
         } catch (SQLException e) {
             e.printStackTrace();

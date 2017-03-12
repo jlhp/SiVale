@@ -27,6 +27,8 @@ public class SiValeParser {
             parsedData = parser.parse(stream);
         } catch (XMLParsingException e) {
             e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
         return parsedData;

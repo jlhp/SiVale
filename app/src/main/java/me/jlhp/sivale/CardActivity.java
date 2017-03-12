@@ -210,7 +210,8 @@ public
     }
 
     private void updateCard(Card card) {
-        mSiValeAPIHandler.updateCard(this, card);
+        mSiValeAPIHandler.getTransactionsvV2(this, card.getNumber(), card.getId());
+        //mSiValeAPIHandler.updateCard(this, card);
     }
 
     private void deleteCard(Card card) {
@@ -268,6 +269,6 @@ public
                             .getDefaultSharedPreferences(this)
                             .getInt(getString(R.string.pref_key_sync_frequency), 1);
 
-        Util.setSiValeSynchronizationAlarm(this, syncFrequency);
+        //Util.setSiValeSynchronizationAlarm(this, syncFrequency);
     }
 }

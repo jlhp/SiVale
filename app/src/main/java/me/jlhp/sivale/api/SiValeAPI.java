@@ -9,7 +9,9 @@ import org.apache.http.Header;
 import org.apache.http.conn.ConnectTimeoutException;
 
 import de.greenrobot.event.EventBus;
+import me.jlhp.sivale.envelope.BaseEnv;
 import me.jlhp.sivale.envelope.BaseEnvelope;
+import me.jlhp.sivale.envelope.BaseEnvelopeV2;
 import me.jlhp.sivale.envelope.EnvelopeParameter;
 import me.jlhp.sivale.event.ErrorEvent;
 import me.jlhp.sivale.event.FaultEvent;
@@ -27,6 +29,7 @@ import me.jlhp.sivale.model.server.TransactionData;
 public class SiValeAPI {
 
     private final BaseEnvelope.Builder SoapEnvelopeBuilder = new BaseEnvelope.Builder();
+    private final BaseEnvelopeV2.Builder SoapEnvelopeBuilderV2 = new BaseEnvelopeV2.Builder();
     private boolean mSyncMode = false;
 
     public void login(Context context, String cardNumber, String password, AsyncHttpResponseHandler handler) {
@@ -61,11 +64,21 @@ public class SiValeAPI {
         postEnvelope(context, getTransactionsEnvelope, handler);
     }
 
+    public void getTransactionsV2(Context context, String cardNumber, AsyncHttpResponseHandler handler) {
+        BaseEnvelopeV2 getTransactionsEnvelope = SoapEnvelopeBuilderV2
+                .setSoapOperation("consultarMovimientosRequest")
+                .addParameter(new EnvelopeParameter("identificador", "1", "d:string"))
+                .addParameter(new EnvelopeParameter("tarjeta", cardNumber, "d:string"))
+                .create();
+
+        postEnvelope(context, getTransactionsEnvelope, handler);
+    }
+
     public void setSyncMode(boolean syncMode) {
         mSyncMode = syncMode;
     }
 
-    private void postEnvelope(Context context, BaseEnvelope envelope, AsyncHttpResponseHandler responseHandler) {
+    private void postEnvelope(Context context, BaseEnv envelope, AsyncHttpResponseHandler responseHandler) {
         SiValeClient.post(context, envelope, responseHandler, mSyncMode);
     }
 }
